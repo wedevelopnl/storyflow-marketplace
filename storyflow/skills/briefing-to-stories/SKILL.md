@@ -20,14 +20,20 @@ If no ID is provided, ask the user for one. Suggest running `/storyflow:briefing
 
 ### 1. Load project context
 
-Read `.storyflow/config.json` to get `customer_name`, `asset_name`, `customer_id`, `asset_id`.
+Read `.storyflow/config.json` to get `project.customer_name`, `project.name`, and `project.assets[]`.
 - If the file does not exist: tell the user to run `/storyflow:setup` first. Do not proceed without config.
 
-### 2. Load briefing
+### 2. Load briefing and resolve its asset
 
 Call `mcp__storyflow__get-briefing` with the provided ID.
 
 **Validate eligibility**: Check the briefing's available transitions (included in the response). The `create-briefing-stories` MCP tool requires the briefing to be in a status that allows story creation. If this is not possible, inform the user of the current status and the available transitions instead. Stop here if story creation is not available.
+
+**Locate the briefing's asset in config**: Match the briefing's asset id against `project.assets[].id`.
+
+- If found: use that asset's `name` and `working_dir` for the codebase analysis below.
+- If `working_dir` is missing: ask the user for the local path, or fall back to `$CLAUDE_PROJECT_DIR` with a warning.
+- If the briefing's asset is not in this project's configured assets: warn the user and ask whether to continue against the current cwd or stop.
 
 ### 3. Check existing stories
 
@@ -48,7 +54,7 @@ Follow the guidelines strictly throughout the remaining steps. The guidelines co
 
 ### 5. Analyze codebase
 
-Dispatch the `codebase-analyzer` agent with the briefing context (asset name, briefing title, functional document content). Wait for the functional analysis result.
+Dispatch the `codebase-analyzer` agent with the briefing context (asset name, briefing title, functional document content). Tell the agent to operate in the briefing-asset's `working_dir` (resolved in step 2). Wait for the functional analysis result.
 
 ### 6. Story plan, write, review, save
 

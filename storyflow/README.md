@@ -63,14 +63,14 @@ Start Claude Code in your project directory and run:
 /storyflow:setup
 ```
 
-This links the current codebase to a specific customer and asset in StoryFlow.
+This links the current codebase to a StoryFlow project. A project belongs to one customer and contains zero or more assets (codebases). The plugin captures every asset in the project and resolves the active asset per command from the current working directory, so a single config supports both single-repo projects and projects spanning multiple repositories.
 
 ## Skills
 
 | Skill | Description |
 |-------|-------------|
-| `/storyflow:setup` | Configure plugin for the current project |
-| `/storyflow:briefings` | List briefings for the configured asset, grouped by status |
+| `/storyflow:setup` | Configure plugin for the current project (customer + assets) |
+| `/storyflow:briefings [--all]` | List briefings for the active asset, or use `--all` for every project asset |
 | `/storyflow:briefing <id>` | Smart briefing dashboard with status-aware next steps |
 | `/storyflow:story <id>` | Load individual story details with refinement data |
 | `/storyflow:create-briefing [description]` | Create a new briefing from conversation context, plan files, or free text |

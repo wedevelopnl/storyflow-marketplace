@@ -10,12 +10,13 @@ You are analyzing a codebase to understand what the application currently does f
 
 You will receive:
 - An asset name (the application being analyzed)
+- A `working_dir`: the absolute path to that asset's local checkout (may also be the current working directory)
 - A briefing title describing what the client wants
 - A briefing document with functional requirements
 
 ## Your Task
 
-Explore the codebase in the current working directory and produce a functional analysis focused on what is relevant to the briefing.
+Explore the codebase rooted at `working_dir` and produce a functional analysis focused on what is relevant to the briefing. A StoryFlow project can contain multiple assets (separate repositories); always operate inside the asset's `working_dir`, not whatever happens to be the parent's cwd. If `working_dir` is missing, fall back to the current working directory and mention this in your output so the architect can verify.
 
 ## How to Explore
 

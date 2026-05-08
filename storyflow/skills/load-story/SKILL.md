@@ -17,14 +17,15 @@ If no ID is provided, ask the user for one. Suggest loading a briefing first wit
 
 ## Process
 
-1. **Load project context** (required): Read `.storyflow/config.json` to get `customer_name`, `asset_name`, `customer_id`, `asset_id`.
+1. **Load project context** (required): Read `.storyflow/config.json` to get `project.customer_name`, `project.name`, and `project.assets[]`.
    - If the file does not exist: tell the user to run `/storyflow:setup` first. Do not proceed without config.
 
 2. **Fetch story**: Call `mcp__storyflow__get-story` with the provided ID.
 
 3. **Display story dashboard**:
 
-   If the story's asset does not match `asset_name` from config, show a warning.
+   If the story's asset id is not one of `project.assets[].id`, show a warning:
+   "Note: this story belongs to asset '[story asset name]', which is not part of this project (configured assets: [list of asset names])."
 
    ```
    # Story: [Key] - [Title]

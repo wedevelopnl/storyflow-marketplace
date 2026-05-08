@@ -21,11 +21,21 @@ If no argument is provided and there is relevant context from the current conver
 
 ## Process
 
-### 0. Load project context
+### 0. Load project context and resolve active asset
 
-Read `.storyflow/config.json` to get `customer_id`, `asset_id`, `project_id`, `customer_name`, `asset_name`.
+Read `.storyflow/config.json`.
 
 - If the file does not exist: tell the user to run `/storyflow:setup` first. Do not proceed without config.
+
+Capture `project.id` (as `projectId`), `project.customer_id`, `project.customer_name`, and `project.assets[]`.
+
+**Resolve the active asset** (the asset the new briefing will belong to):
+
+- If `project.assets` is empty: stop and tell the user this project has no assets configured. A briefing must belong to an asset, so they need to add one in StoryFlow and re-run `/storyflow:setup`.
+- If exactly one asset: that's the active asset.
+- If multiple assets: match `$CLAUDE_PROJECT_DIR` against each asset's `working_dir` (exact match, or cwd inside `working_dir`). If exactly one matches, that's the active asset. Otherwise use `AskUserQuestion` to let the user pick from the asset names.
+
+Capture the active asset's `id` as `assetId` and `name` as `assetName`. Use `assetName` everywhere the document references the asset.
 
 ### 1. Fetch guidelines
 

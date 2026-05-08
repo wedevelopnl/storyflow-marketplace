@@ -22,6 +22,7 @@ If no ID is provided, ask the user for one. Suggest running `/storyflow:briefing
 
 1. **Load project context**: Read `.storyflow/config.json`.
    - If file does not exist: continue without. Suggest `/storyflow:setup`.
+   - If file exists: capture `project.customer_name`, `project.name`, and `project.assets[]` for context (refinement itself does not need to scope by asset; it operates per story).
 
 2. **Fetch briefing**: Call `mcp__storyflow__get-briefing` with the provided ID.
 

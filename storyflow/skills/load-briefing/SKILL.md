@@ -18,7 +18,7 @@ If no ID is provided, ask the user for one. Suggest running `/storyflow:briefing
 ## Process
 
 1. **Load project context**: Read `.storyflow/config.json`.
-   - If file exists: extract `customer_name`, `asset_name`, `customer_id`, `asset_id` for context.
+   - If file exists: capture `project.customer_name`, `project.name`, and `project.assets[]` for context.
    - If file does not exist: continue without context. Suggest running `/storyflow:setup` for a better experience.
 
 2. **Fetch briefing and stories in parallel**:
@@ -29,8 +29,8 @@ If no ID is provided, ask the user for one. Suggest running `/storyflow:briefing
 
 3. **Display briefing dashboard**:
 
-   If config was loaded and the briefing's asset does not match `asset_name` from config, show a warning:
-   "Note: this briefing belongs to asset [briefing asset], not the configured asset [asset_name]."
+   If config was loaded and the briefing's asset id is not one of `project.assets[].id`, show a warning:
+   "Note: this briefing belongs to asset '[briefing asset name]', which is not part of this project (configured assets: [list of asset names])."
 
    ```
    # Briefing: [Key] - [Title]

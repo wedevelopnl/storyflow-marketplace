@@ -21,9 +21,17 @@ Examples:
 
 ## Process
 
-1. **Read config**: Read `.storyflow/config.json` to get the `asset_id`.
-   - If the file does not exist or has no `asset_id`, tell the user to run `/storyflow:setup` first and stop.
-   - Extract `asset_id` and `asset_name` from `project.asset_id` and `project.asset_name` in the JSON config.
+1. **Read config and resolve active asset**: Read `.storyflow/config.json`.
+
+   - If the file does not exist: tell the user to run `/storyflow:setup` first and stop.
+
+   Inspect `project.assets[]`:
+
+   - If empty: stop and tell the user this project has no assets configured. Documentation needs an asset to attach to.
+   - If exactly one asset: that's the active asset.
+   - If multiple assets: match `$CLAUDE_PROJECT_DIR` against each asset's `working_dir` (exact match, or cwd inside `working_dir`). If exactly one matches, that's the active asset. Otherwise use `AskUserQuestion` to let the user pick from the asset names. **Documentation always reflects the codebase you're currently in**, so the cwd match is the strongest signal. Warn the user if their pick mismatches the cwd.
+
+   Capture the active asset's `id` as `assetId` and `name` as `assetName`.
 
 2. **Get commit hash**: Run `git rev-parse HEAD` via Bash to get the current commit hash.
 

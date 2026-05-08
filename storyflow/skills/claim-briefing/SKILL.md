@@ -18,12 +18,15 @@ If no ID is provided, ask the user for one. Suggest running `/storyflow:briefing
 
 ## Process
 
-1. **Load project context** (required): Read `.storyflow/config.json` to get `customer_name`, `asset_name`, `customer_id`, `asset_id`.
+1. **Load project context** (required): Read `.storyflow/config.json` to get `project.customer_name`, `project.name`, and `project.assets[]`.
    - If the file does not exist: tell the user to run `/storyflow:setup` first. Do not proceed without config.
 
 2. **Fetch briefing**: Call `mcp__storyflow__get-briefing` with the provided ID to verify it exists and check its status.
 
-3. **Safety check**: Verify the briefing's asset matches the configured asset. If they don't match, warn the user: "This briefing belongs to [briefing asset], but this project is configured for [asset_name]. Are you sure you want to proceed?"
+3. **Safety check**: Compare the briefing's asset id against `project.assets[].id`.
+
+   - If the briefing's asset is one of the configured assets: no warning.
+   - If not: warn the user: "This briefing belongs to asset '[briefing asset name]', which is not part of this project (configured assets: [list of asset names]). Are you sure you want to proceed?" Wait for confirmation before continuing.
 
 4. **Verify claimability**: Check the briefing's available transitions (included in the `get-briefing` response). If `claim` is not listed as an available transition, inform the user of the current status and the available transitions instead.
 

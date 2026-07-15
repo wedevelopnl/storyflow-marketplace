@@ -65,6 +65,10 @@ Start Claude Code in your project directory and run:
 
 This links the current codebase to a StoryFlow project. A project belongs to one customer and contains zero or more assets (codebases). The plugin captures every asset in the project and resolves the active asset per command from the current working directory, so a single config supports both single-repo projects and projects spanning multiple repositories.
 
+### Other MCP clients
+
+The plugin targets Claude Code, but the StoryFlow MCP server works with any MCP client: Claude Desktop, ChatGPT, Cursor, VS Code, or a Personal Access Token bridge for clients without OAuth support. See the [MCP client setup guide](https://git.wdvlp.nl/wedevelop/storyflow/-/blob/main/docs/reference/mcp-client-setup.md) for per-client instructions.
+
 ## Skills
 
 | Skill | Description |

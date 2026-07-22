@@ -4,6 +4,12 @@ All notable changes to the StoryFlow plugin will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- The `invoice` transition is no longer listed for stories. Invoicing is driven by the Invoice aggregate on the StoryFlow platform; the `transition-story` MCP tool no longer includes `invoice` as an available action.
+
 ## 3.0.0 - 2026-05-08
 
 ### BREAKING CHANGES

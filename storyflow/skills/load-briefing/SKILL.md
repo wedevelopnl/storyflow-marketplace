@@ -1,13 +1,13 @@
 ---
 name: briefing
-description: "Fetch and display a briefing as a smart dashboard with full context: stories, status, functional specification, conversation, and status-aware next steps. Use when the user asks about a specific briefing, wants briefing details, or needs to understand what a briefing contains."
+description: "Fetch and display a briefing as a smart dashboard with full context: stories, derived state, functional specification, and state-aware next steps. Use when the user asks about a specific briefing, wants briefing details, or needs to understand what a briefing contains."
 allowed-tools: mcp__storyflow__get-briefing, mcp__storyflow__get-briefing-stories, mcp__storyflow__add-briefing-comment, Read
 argument-hint: "<briefing-id>"
 ---
 
 # Load Briefing Context
 
-Fetch and display a briefing as a smart dashboard: full context with status-aware next steps.
+Fetch and display a briefing as a smart dashboard: full context with state-aware next steps.
 
 ## Arguments
 
@@ -34,8 +34,9 @@ If no ID is provided, ask the user for one. Suggest running `/storyflow:briefing
 
    ```
    # Briefing: [Key] - [Title]
-   Status: [status] | Customer: [customer] | Asset: [asset] | Project: [project]
-   Architect: [assigned name or "unassigned"] | Created: [date] | Updated: [date]
+   State: [state] ([done]/[total] stories done) | Handed over: [yes/no]
+   Customer: [customer] | Asset: [asset] | Project: [project]
+   Created: [date] | Updated: [date]
 
    ## Briefing Document
    [Show the full briefing document content as returned by get-briefing.
@@ -49,24 +50,35 @@ If no ID is provided, ask the user for one. Suggest running `/storyflow:briefing
    | [key] | [title] | [status] | [priority] | [price or -] | [complexity or -] | [risk or -] |
 
    ## Next Steps
-   [Status-aware guidance, see below]
+   [State-aware guidance, see below]
    ```
 
-4. **Available transitions and next steps**:
+4. **Next steps**
 
-   The `get-briefing` MCP response includes an "Available transitions" section. Each transition has an action name, target status, label, description, and any required data fields. Display these as the next steps.
+   A briefing has no status and no transition list: it is a status-less intake source. The work moves forward through its **stories**, not through the briefing. Reason from the two signals the `get-briefing` response gives you, the derived state and the handoff flag:
 
-   For each available transition:
-   - Show the transition label and description as returned by the MCP
-   - If a `/storyflow:` skill exists that performs this action, suggest it (match by action name or description)
-   - Otherwise, suggest using the `transition-briefing` MCP tool with the transition name and any required data fields shown in the response
+   | State | Meaning |
+   |---|---|
+   | `in_opmaak` | Not handed over yet and no relevant stories exist. Still being drafted. |
+   | `overgedragen` | Handed over, or relevant stories exist, but not all of them are delivered. |
+   | `afgerond` | Relevant stories exist and all of them are delivered. |
 
-   If no transitions are available, the briefing is in a terminal state.
+   A story is "relevant" when it is neither cancelled nor archived; those count toward neither the state nor the counter. A briefing whose stories were all cancelled therefore reads `in_opmaak` while the stories table still lists them.
 
-5. **Orthogonal flag**: The `get-briefing` response includes an `archivedAt` field that is independent of the workflow status:
+   Derive the next steps:
 
-   - `archivedAt`: when set, the briefing is soft-deleted. It should only appear in the current view if the user explicitly requested archived items. If the field is set, prepend "This briefing is archived" to the output.
+   - **`in_opmaak`**: the document is still being shaped. Point the user at the `update-briefing` MCP tool to edit it, then `/storyflow:briefing-to-stories <key>` once it is complete.
+   - **`overgedragen`, no stories**: a fresh delivery. Suggest `/storyflow:briefing-to-stories <key>` to generate the stories.
+   - **`overgedragen`, with stories**: the work is under way. Suggest `/storyflow:refine-briefing <key>` for stories that still need refinement, `/storyflow:implement-briefing <key>` for a plan, and the `transition-story` MCP tool to move individual stories.
+   - **`afgerond`**: everything is delivered. Mention that the `transition-briefing` MCP tool with `archive` curates the briefing off the intake list.
 
-   The archive flag is toggled via dedicated MCP actions (`archive-briefing`, `unarchive-briefing`) and is NOT a workflow transition. It does not appear in the "Available transitions" list.
+5. **Briefing-level actions**
+
+   This skill is read-only: name the available actions, never perform them. Only two exist, both through the `transition-briefing` MCP tool:
+
+   - `cancel`: requires a `reason` in the data JSON. Cascade-cancels the open stories and archives the briefing. Only mention this when the user wants to drop the work.
+   - `archive`: only allowed once every linked story is delivered.
+
+   Note when you name either one that both remove the briefing from the default listings, and that an archived briefing can no longer be modified via `update-briefing`.
 
    Always end with: "Use `/storyflow:story <key>` to dive into a specific story's full details, acceptance criteria, and refinement analysis."

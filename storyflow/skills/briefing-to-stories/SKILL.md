@@ -1,14 +1,14 @@
 ---
 name: briefing-to-stories
-description: "Generate user stories from an accepted briefing. Uses codebase-analyzer agent for analysis, MCP guidelines for format, and creates stories in epics or standalone groups. Includes a two-phase review (story plan, then full stories) before saving."
+description: "Generate user stories from a briefing. Uses codebase-analyzer agent for analysis, MCP guidelines for format, and creates stories in epics or standalone groups. Includes a two-phase review (story plan, then full stories) before saving."
 disable-model-invocation: true
-allowed-tools: mcp__storyflow__get-briefing, mcp__storyflow__get-briefing-stories, mcp__storyflow__create-briefing-stories, mcp__storyflow__transition-briefing, mcp__storyflow__get-briefing-to-stories-guidelines, Read, Glob, Grep, Bash, Agent
+allowed-tools: mcp__storyflow__get-briefing, mcp__storyflow__get-briefing-stories, mcp__storyflow__create-briefing-stories, mcp__storyflow__get-briefing-to-stories-guidelines, Read, Glob, Grep, Bash, Agent
 argument-hint: "<briefing-id>"
 ---
 
 # Briefing to Stories
 
-Generate user stories from an accepted briefing.
+Generate user stories from a briefing.
 
 ## Arguments
 
@@ -27,7 +27,7 @@ Read `.storyflow/config.json` to get `project.customer_name`, `project.name`, an
 
 Call `mcp__storyflow__get-briefing` with the provided ID.
 
-**Validate eligibility**: Check the briefing's available transitions (included in the response). The `create-briefing-stories` MCP tool requires the briefing to be in a status that allows story creation. If this is not possible, inform the user of the current status and the available transitions instead. Stop here if story creation is not available.
+**Validate eligibility**: story generation is **one-shot**. A briefing has no status; the preconditions are that it is not archived, has no stories yet, and that you hold the agency permission to create stories on it. All three live in the backend, so `create-briefing-stories` is the authority: if it refuses, relay its error message verbatim and stop. Use the derived state in the response as an early signal (`in_opmaak` and `overgedragen` with `0/0 stories` are the normal starting points), not as a hard gate.
 
 **Locate the briefing's asset in config**: Match the briefing's asset id against `project.assets[].id`.
 
@@ -39,7 +39,7 @@ Call `mcp__storyflow__get-briefing` with the provided ID.
 
 Call `mcp__storyflow__get-briefing-stories` with the briefing ID.
 
-If stories already exist, warn the user and wait for confirmation before proceeding.
+If stories already exist, stop and tell the user: story generation runs once per briefing, so `create-briefing-stories` will reject the call. Point them at `/storyflow:briefing <key>` to work with the existing stories instead.
 
 ### 4. Fetch guidelines
 
@@ -64,8 +64,8 @@ Follow the Workflow section from the guidelines:
 2. **Write stories** (Phase 2 review gate): write full descriptions, iterate until the architect says "save"
 3. **Save**: call `mcp__storyflow__create-briefing-stories` with the briefing ID and the JSON data structured as described in the guidelines
 
-### 7. Transition and report
+### 7. Report
 
-After stories are created, fetch the briefing again to check available transitions. Apply the appropriate transition to advance the briefing. Report results following the guidelines report format.
+There is no briefing transition to apply afterwards: the briefing is a status-less intake source, and its derived state follows the stories you just created automatically. Fetch the briefing again only to show the updated state, then report results following the guidelines report format.
 
-**Note:** Stories generated from a briefing start in the `Accepted` status (not `Submitted`). The agency has committed to the work by generating the stories, so the commitment is implicit; the agency still needs to confirm the scope explicitly by moving each story to `Scoped` before refinement is allowed.
+**Note:** Stories generated from a briefing start in the `Scoped` status. Generating them is the agency's commitment to the scope, so the `accept` and `scope` steps are already implied and the stories are immediately refineable: continue with `/storyflow:refine-briefing <key>`.

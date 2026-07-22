@@ -130,12 +130,13 @@ After the user approves:
 ```
 Briefing created: [KEY] - "[title]"
 ID: [uuid]
-Status: [status]
-
-[Available transitions from the response]
+Project: [project] | Asset: [asset]
+State: [state] ([done]/[total] stories done)
 
 Next steps:
 - Share the briefing with your client for review
 - Use `/storyflow:briefing [KEY]` to view the full briefing
-- Use `/storyflow:briefing-to-stories [KEY]` after the briefing is accepted
+- Use `/storyflow:briefing-to-stories [KEY]` to turn it into stories
 ```
+
+A briefing has no status: `get-briefing` reports a derived state (`in_opmaak` until stories exist or it is handed over) and there is no transition list to show.

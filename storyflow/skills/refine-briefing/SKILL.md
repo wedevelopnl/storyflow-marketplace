@@ -1,6 +1,6 @@
 ---
 name: refine-briefing
-description: "Run multi-agent refinement analysis on all stories within a briefing. Filters stories by status (in_review by default), confirms scope with the user, then refines each story using parallel subagents per engineering perspective. Guidelines are fetched once from the ai-service and reused across all stories."
+description: "Run multi-agent refinement analysis on all stories within a briefing. Filters stories by status (Scoped by default), confirms scope with the user, then refines each story using parallel subagents per engineering perspective. Guidelines are fetched once from the ai-service and reused across all stories."
 disable-model-invocation: true
 allowed-tools: mcp__storyflow__get-briefing, mcp__storyflow__get-briefing-stories, mcp__storyflow__get-story, mcp__storyflow__get-refinement-guidelines, mcp__storyflow__refine-story, mcp__storyflow__transition-story, Read, Grep, Glob, Agent
 argument-hint: "<briefing-id>"
@@ -41,4 +41,4 @@ Follow the Batch Refinement section from the guidelines Workflow:
 1. **Confirm scope**: Show stories to be refined, wait for confirmation
 2. **Refine each story**: Triage, dispatch, synthesize, save per the Workflow. Show progress.
 3. **Summary table**: Display all results
-4. **Next steps**: Fetch stories and briefing to suggest available transitions
+4. **Next steps**: Fetch the stories again and suggest their available transitions. The briefing itself has no transitions: its derived state follows the stories.

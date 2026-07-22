@@ -1,6 +1,6 @@
 ---
 name: briefings
-description: "Shows briefings for the active asset (resolved from cwd) or for all configured project assets, grouped by status. Highlights briefings ready to claim (Accepted). Use when the user asks to see available work, list briefings, or check what needs attention."
+description: "Shows briefings for the active asset (resolved from cwd) or for all configured project assets, grouped by their derived state. Highlights new deliveries that still need stories. Use when the user asks to see available work, list briefings, or check what needs attention."
 allowed-tools: mcp__storyflow__list-briefings, AskUserQuestion, Read
 argument-hint: "[--all]"
 ---
@@ -35,34 +35,53 @@ Show briefings, highlighting what needs attention.
    - For a single-asset scope: call `mcp__storyflow__list-briefings` once with `customerId` and `assetId`.
    - For "all assets": call `mcp__storyflow__list-briefings` once per asset (parallel) and merge.
 
-4. **Display briefings**:
+   Archived briefings are excluded from the response. The optional `state` parameter filters on the derived state; leave it unset here so every state is shown.
 
-   For a single-asset scope, group by status (most actionable first), skip empty groups:
+4. **Read the derived state**
+
+   A briefing has no status of its own. Every line of the response carries a derived state plus a story counter:
+
+   ```
+   - WDV-BR-12: "Invoice PDF export" | State: overgedragen (1/4 stories done) | Customer: ... | Asset: ... (ID: ...) | ID: ...
+   ```
+
+   | State | Meaning |
+   |---|---|
+   | `in_opmaak` | Not handed over yet and no relevant stories exist. The briefing is still being drafted. |
+   | `overgedragen` | Handed over, or relevant stories exist, but not all of them are delivered. |
+   | `afgerond` | Relevant stories exist and all of them are delivered. |
+
+   A story is "relevant" when it is neither cancelled nor archived; those count toward neither the state nor the counter.
+
+5. **Display briefings**
+
+   For a single-asset scope, group by state in this order (most actionable first), skipping empty groups: `overgedragen`, `in_opmaak`, `afgerond`.
 
    ```
    # Briefings for [asset_name] ([customer_name])
 
-   ## [Status Group]
+   ## Overgedragen
    [Key] [Title]
-   Status: [status] | Architect: [name or unassigned] | Stories: [count if available]
-   Available actions: [list transition labels from MCP response]
+   State: overgedragen | Stories: [done]/[total]
    ```
 
-   For "all assets", group first by asset, then by status within each asset:
+   For "all assets", group first by asset, then by state within each asset:
 
    ```
    # Briefings for [customer_name] / [project_name]
 
    ## [asset_name] ([asset_key])
-   ### [Status Group]
+   ### [State]
    [Key] [Title]
    ...
    ```
 
-   A briefing is a "ready to claim" candidate when its status is `Accepted` and no architect is assigned yet. Briefings later in the lifecycle (`Scoped`, `Refined`, `Priced`, `ToDo`, `Doing`) are already being worked on (their status projects from the linked stories).
+   **Highlight new deliveries**: a briefing in state `overgedragen` with `0/0 stories` was handed over but has no stories yet. That is the work waiting to be picked up. Mark those lines and list them first within the group.
 
-5. **Suggest next steps**:
+6. **Suggest next steps**:
 
-   - For briefings with available transitions: suggest `/storyflow:briefing <key>` to see full details and act on the transitions.
+   - New deliveries (`overgedragen`, `0/0 stories`): suggest `/storyflow:briefing-to-stories <key>` to generate stories.
+   - `overgedragen` with stories: suggest `/storyflow:briefing <key>` for the full dashboard, or `/storyflow:implement-briefing <key>` to plan the work.
+   - `in_opmaak`: suggest `/storyflow:briefing <key>` to review the draft.
    - If no briefings exist for the chosen scope: "No briefings found. Check the StoryFlow UI or ask the customer to create a briefing."
    - If scope was a single asset and there are configured siblings: hint that `/storyflow:briefings --all` lists every asset's briefings.

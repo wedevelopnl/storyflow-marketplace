@@ -1,30 +1,49 @@
 # StoryFlow Plugin for Claude Code
 
-Connect Claude Code to the StoryFlow platform so Software Architects can browse briefings, claim work, and generate implementation plans without leaving the terminal.
+Connect Claude Code to the StoryFlow platform so Software Architects can browse briefings, turn them into stories, and generate implementation plans without leaving the terminal.
 
 ## What it does
 
-- **Browse briefings**: View available client briefings grouped by status directly in your terminal.
-- **Claim and implement**: Claim accepted briefings and generate structured implementation plans from the stories they contain.
+- **Browse briefings**: View client briefings grouped by their derived state directly in your terminal.
+- **Turn intake into work**: Generate stories from a briefing and build structured implementation plans from the stories it contains.
 - **Load story context**: Pull individual story details into your session for reference while coding.
 - **Generate documentation**: Create or update functional and technical asset documentation from the current codebase.
 
-## Briefing lifecycle
+## Briefing model
 
-StoryFlow briefings and stories share a workflow-status lifecycle with one orthogonal flag.
+A briefing is a **status-less intake source**. It has no workflow status of its own: the work moves forward through the stories generated from it. Only the story lifecycle is a real state machine:
 
-**Workflow status (projected from stories once the briefing is Accepted):**
+`Draft -> Submitted -> Accepted -> Scoped -> Refined -> {Priced ->} ToDo -> Doing -> InReview -> Done`
 
-`Draft -> Submitted -> Accepted -> Scoped -> Refined -> Priced -> ToDo -> Doing -> Done`
+`Priced` is route-dependent. Projects whose billing model requires story pricing go through it; fixed-price and non-billable projects move a refined story straight to `ToDo`.
 
-- Pre-Accepted steps (`Draft`, `Submitted`, `Accepted`) are driven by explicit briefing actions (customer submits, agency accepts).
-- From `Accepted` onwards the briefing status is projected from its linked stories using a min-wins rule with a `Doing` any-wins override. Moving stories forward (scope, refine, price, approve, start, complete) moves the briefing automatically; there are no separate briefing transitions for those steps.
+**Derived state (never stored, computed per read):**
 
-**Orthogonal flag (independent of workflow status):**
+| State | Meaning |
+|---|---|
+| `in_opmaak` | Not handed over yet and no relevant stories exist. The briefing is still being drafted. |
+| `overgedragen` | Handed over, or relevant stories exist, but not all of them are delivered. |
+| `afgerond` | Relevant stories exist and all of them are delivered. |
 
-- `archivedAt`: soft-delete flag. Preserves the workflow status but hides the entity from default listings. Set via `archive-story` / `archive-briefing` from a terminal status, cleared via `unarchive-story` / `unarchive-briefing`.
+A story is "relevant" when it is neither cancelled nor archived; those are excluded from both the state and the counter. So a briefing whose stories were all cancelled falls back to `in_opmaak`.
 
-The archive flag is NOT a workflow transition. The MCP server exposes it as a separate action; the `briefing` and `story` skills surface it in their output alongside the workflow status.
+```mermaid
+flowchart TD
+    A[Briefing] --> B{All relevant stories done?}
+    B -- yes --> C[afgerond]
+    B -- no --> D{Handed over or any relevant story?}
+    D -- yes --> E[overgedragen]
+    D -- no --> F[in_opmaak]
+```
+
+`list-briefings` and `get-briefing` render this state alongside a `[done]/[total] stories done` counter; `get-briefing` also reports the handoff flag.
+
+**Two flags, two actions:**
+
+- Handoff (`Handed over: yes/no`): the customer has delivered the briefing to the agency.
+- Archive: soft-delete. An archived briefing drops out of the default listings and can no longer be modified.
+
+The only briefing-level actions are `cancel` (needs a reason; cascade-cancels the open stories and archives the briefing) and `archive` (allowed once every linked story is delivered). Both go through the `transition-briefing` MCP tool. Story generation is one-shot: `create-briefing-stories` refuses a briefing that is archived or already has stories, and the stories it creates start in `Scoped`.
 
 ## Requirements
 
@@ -75,11 +94,10 @@ The plugin targets Claude Code, but the StoryFlow MCP server works with any MCP 
 |-------|-------------|
 | `/storyflow:setup` | Configure plugin for the current project (customer + assets) |
 | `/storyflow:briefings [--all]` | List briefings for the active asset, or use `--all` for every project asset |
-| `/storyflow:briefing <id>` | Smart briefing dashboard with status-aware next steps |
+| `/storyflow:briefing <id>` | Smart briefing dashboard with state-aware next steps |
 | `/storyflow:story <id>` | Load individual story details with refinement data |
 | `/storyflow:create-briefing [description]` | Create a new briefing from conversation context, plan files, or free text |
-| `/storyflow:claim-briefing <id>` | Claim an accepted briefing for implementation |
-| `/storyflow:briefing-to-stories <id>` | Generate user stories from an accepted briefing |
+| `/storyflow:briefing-to-stories <id>` | Generate user stories from a briefing |
 | `/storyflow:refine-story <id>` | Refine a single story with multi-agent analysis |
 | `/storyflow:price-story <id>` | Price a refined story using agency-specific pricing guidelines |
 | `/storyflow:refine-briefing <id>` | Refine all stories of a briefing with multi-agent analysis |
@@ -102,12 +120,12 @@ Refinement agents have been removed. Refinement is now handled by the `refine-st
 A typical session for a Software Architect:
 
 **Working on existing briefings:**
-1. `/storyflow:briefings` to see available work
+1. `/storyflow:briefings` to see available work (a briefing in `overgedragen` with `0/0 stories` is a fresh delivery)
 2. `/storyflow:briefing <id>` to review a specific briefing
-3. `/storyflow:claim-briefing <id>` to claim it
+3. `/storyflow:briefing-to-stories <id>` to turn it into stories, if it has none yet
 4. `/storyflow:implement-briefing <id>` to generate an implementation plan
 5. Execute the plan phase by phase
-6. Mark stories as done via the `transition-story` MCP tool
+6. Move stories forward via the `transition-story` MCP tool
 
 **Creating new briefings from context:**
 1. Discuss a feature, plan, or requirement in your Claude Code session

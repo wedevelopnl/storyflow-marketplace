@@ -6,8 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+### BREAKING CHANGES
+
+**The briefing is a status-less intake source.** The StoryFlow platform removed the briefing status lifecycle; the plugin skills still described the old model and gave instructions the MCP server rejects. A briefing no longer has a workflow status, a status projection from its stories, or a transition list. Only the story lifecycle remains a state machine.
+
+- **Removed the `/storyflow:claim-briefing` skill.** The `claim` transition no longer exists on the platform. Claiming belonged to the status model; picking up work now means moving the stories (`transition-story`).
+- `list-briefings` and `get-briefing` report a **derived state** instead of a status: `in_opmaak` (not handed over, no relevant stories), `overgedragen` (handed over, or relevant stories exist but not all delivered), `afgerond` (all relevant stories delivered), plus a `[done]/[total] stories done` counter. A story is relevant when it is neither cancelled nor archived. The state is computed per read and never stored. `get-briefing` also reports the handoff flag; there is no "Available transitions" section.
+- `transition-briefing` supports only `cancel` (requires a `reason`; cascade-cancels the open stories and archives the briefing) and `archive` (allowed once every linked story is delivered).
+
+### Migration
+
+Replace `/storyflow:claim-briefing <id>` in your workflow with `/storyflow:briefing-to-stories <id>` (for a briefing without stories) or `/storyflow:implement-briefing <id>` followed by `transition-story` (for one that already has them).
+
 ### Changed
 
+- `briefings` skill: groups briefings by derived state (`overgedragen`, `in_opmaak`, `afgerond`) instead of by status, and highlights fresh deliveries (`overgedragen` with `0/0 stories`) as the work to pick up. The architect column is gone: the MCP response never carried one.
+- `briefing` skill: derives its next steps from the state plus the handoff flag rather than from a transitions section, and documents the two briefing-level actions (`cancel`, `archive`).
+- `briefing-to-stories` skill: eligibility is the backend's one-shot guard (not archived, no stories yet) instead of a status check, and it no longer applies a briefing transition after saving.
+- `create-briefing` skill: the result template no longer prints a status or transition list.
+- `refine-briefing` skill: the description now matches the body (stories are filtered on `Scoped`, not "in_review").
+- `briefing-to-stories` and `story` skills: briefing-generated stories start in `Scoped`, not `Accepted`. Generating them from a briefing is the agency's commitment to the scope, so they are immediately refineable.
+- `story` skill: the archive flag is applied through `transition-story` with `archive` / `unarchive`; there are no separate `archive-story` / `unarchive-story` tools.
 - The `invoice` transition is no longer listed for stories. Invoicing is driven by the Invoice aggregate on the StoryFlow platform; the `transition-story` MCP tool no longer includes `invoice` as an available action.
 
 ## 3.0.0 - 2026-05-08

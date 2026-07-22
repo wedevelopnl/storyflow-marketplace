@@ -1,7 +1,7 @@
 {
   "name": "storyflow",
   "version": "3.0.0",
-  "description": "StoryFlow integration for Software Architects: browse briefings, claim work, and generate implementation plans from client requirements",
+  "description": "StoryFlow integration for Software Architects: browse briefings, turn them into stories, and generate implementation plans from client requirements",
   "author": {
     "name": "WeDevelop",
     "url": "https://wedevelop.nl"

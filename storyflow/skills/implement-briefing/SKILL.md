@@ -39,7 +39,7 @@ If no ID is provided, ask the user for one. Suggest running `/storyflow:briefing
    Why: `get-briefing-stories` only returns titles, status, price, and complexity/risk. The briefing-planner agent needs the full descriptions and acceptance criteria to generate a good plan.
 
 5. **Prepare agent prompt**: Compile all briefing and story data into a structured prompt for the briefing-planner agent. Include:
-   - Briefing title, status, customer, asset name and key
+   - Briefing title, derived state, customer, asset name and key
    - The asset's `working_dir` (so the agent knows where to explore)
    - Full briefing document (functional specification from Virtual PO chat)
    - Full story list with titles, descriptions, acceptance criteria, refinement reports, concerns, complexity, priority

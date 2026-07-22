@@ -63,13 +63,13 @@ If no ID is provided, ask the user for one. Suggest loading a briefing first wit
 
    - `archivedAt`: soft-delete flag. If set, prepend "This story is archived" to the output.
 
-   The archive flag is an orthogonal action, not a workflow transition. It does not appear in the "Available transitions" list; it is surfaced via separate MCP actions (`archive-story`, `unarchive-story`).
+   The archive flag is an orthogonal action, not a workflow transition. It does not appear in the "Available transitions" list; it is applied through the `transition-story` MCP tool with `archive` or `unarchive`, which set the flag without touching the workflow status.
 
 6. **Accept and Scope**: The feature story lifecycle includes two explicit agency commitment steps between `Submitted` and `Refined`:
 
    - `accept`: the agency commits to the story (`Submitted -> Accepted`)
    - `scope`: the agency confirms the scope definition (`Accepted -> Scoped`)
 
-   Refinement (`refine`) now starts from `Scoped`, not `Submitted`. Briefing-generated stories start in `Accepted` (the agency has implicitly committed by generating them); the agency still needs to confirm the scope explicitly via `scope` before refinement is allowed. A story shown in `Accepted` or `Scoped` is waiting for the agency to advance it, not for the customer.
+   Refinement (`refine`) starts from `Scoped`, not `Submitted`. Briefing-generated stories skip both steps and start in `Scoped`: generating them from an approved briefing is the agency's commitment to the scope, so they are immediately refineable. A story shown in `Accepted` or `Scoped` is waiting for the agency to advance it, not for the customer.
 
    Always end with: "Use `/storyflow:briefing <key>` to see the full briefing context for this story."

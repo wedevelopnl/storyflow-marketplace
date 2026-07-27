@@ -4,6 +4,27 @@ All notable changes to the StoryFlow plugin will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### BREAKING CHANGES
+
+**`transition-briefing` is replaced by three named tools.** A status-less briefing has no transitions: cancel is a one-way domain action and archive is a reversible visibility flag. Calling them "transitions" invited agents to look for a state machine that does not exist, and left `unarchive` unreachable from MCP even though the domain and the HTTP API have it.
+
+| Removed | Use instead |
+|---|---|
+| `transition-briefing(id, "cancel", '{"reason":"..."}')` | `cancel-briefing(id, reason)` |
+| `transition-briefing(id, "archive")` | `archive-briefing(id)` |
+| not available | `unarchive-briefing(id)` |
+
+- The cancellation reason is now a required parameter instead of a key in a `data` JSON string. A blank or missing reason is refused; previously the MCP path cancelled the briefing with an empty cancellation comment while the HTTP API answered 400 on the same input.
+- All three tools now check `BriefingVoter` before dispatching, matching the HTTP controllers. `transition-briefing` checked only agency ownership.
+- `archive-briefing` reports an undelivered briefing as a state problem rather than a permission problem.
+
+### Changed
+
+- `briefing` skill: names the three lifecycle tools instead of `transition-briefing`, and stays read-only.
+- README: documents the three actions in a table, including that `unarchive-briefing` neither cascades to the stories nor undoes a cancel.
+
 ## 4.0.0 - 2026-07-22
 
 ### BREAKING CHANGES

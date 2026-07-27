@@ -70,15 +70,16 @@ If no ID is provided, ask the user for one. Suggest running `/storyflow:briefing
    - **`in_opmaak`**: the document is still being shaped. Point the user at the `update-briefing` MCP tool to edit it, then `/storyflow:briefing-to-stories <key>` once it is complete.
    - **`overgedragen`, no stories**: a fresh delivery. Suggest `/storyflow:briefing-to-stories <key>` to generate the stories.
    - **`overgedragen`, with stories**: the work is under way. Suggest `/storyflow:refine-briefing <key>` for stories that still need refinement, `/storyflow:implement-briefing <key>` for a plan, and the `transition-story` MCP tool to move individual stories.
-   - **`afgerond`**: everything is delivered. Mention that the `transition-briefing` MCP tool with `archive` curates the briefing off the intake list.
+   - **`afgerond`**: everything is delivered. Mention that `archive-briefing` curates it off the intake list.
 
 5. **Briefing-level actions**
 
-   This skill is read-only: name the available actions, never perform them. Only two exist, both through the `transition-briefing` MCP tool:
+   This skill is read-only: name the available actions, never perform them. There are no briefing transitions, only three named tools:
 
-   - `cancel`: requires a `reason` in the data JSON. Cascade-cancels the open stories and archives the briefing. Only mention this when the user wants to drop the work.
-   - `archive`: only allowed once every linked story is delivered.
+   - `cancel-briefing(briefingId, reason)`: the reason is required. Cascade-cancels the open stories and archives the briefing. One-way, so only mention it when the user wants to drop the work.
+   - `archive-briefing(briefingId)`: only allowed once every linked story is delivered.
+   - `unarchive-briefing(briefingId)`: restores an archived briefing. It does not cascade to the stories and does not undo a cancel.
 
-   Note when you name either one that both remove the briefing from the default listings, and that an archived briefing can no longer be modified via `update-briefing`.
+   Note when you name cancel or archive that both remove the briefing from the default listings, and that an archived briefing can no longer be modified via `update-briefing`.
 
    Always end with: "Use `/storyflow:story <key>` to dive into a specific story's full details, acceptance criteria, and refinement analysis."

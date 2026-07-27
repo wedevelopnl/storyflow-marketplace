@@ -43,7 +43,15 @@ flowchart TD
 - Handoff (`Handed over: yes/no`): the customer has delivered the briefing to the agency.
 - Archive: soft-delete. An archived briefing drops out of the default listings and can no longer be modified.
 
-The only briefing-level actions are `cancel` (needs a reason; cascade-cancels the open stories and archives the briefing) and `archive` (allowed once every linked story is delivered). Both go through the `transition-briefing` MCP tool. Story generation is one-shot: `create-briefing-stories` refuses a briefing that is archived or already has stories, and the stories it creates start in `Scoped`.
+There are no briefing transitions, only three named actions, each its own MCP tool:
+
+| Tool | Effect |
+|---|---|
+| `cancel-briefing(briefingId, reason)` | Records the reason as a visible comment, cancels the still-open stories, archives the briefing. One-way. |
+| `archive-briefing(briefingId)` | Drops the briefing out of the default listings. Only once every linked story is delivered. |
+| `unarchive-briefing(briefingId)` | Restores it. Does not cascade, and does not undo a cancel. |
+
+Story generation is one-shot: `create-briefing-stories` refuses a briefing that is archived or already has stories, and the stories it creates start in `Scoped`.
 
 ## Requirements
 

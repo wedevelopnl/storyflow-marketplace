@@ -1,6 +1,6 @@
 ---
 name: story
-description: "Fetch and display complete details for a specific story: description, acceptance criteria, refinement data (complexity, risk, report, concerns), comments, and status-aware next steps. Use when the user asks about a specific story or wants to see story details."
+description: "Fetch and display complete details for a specific story: description, acceptance criteria, refinement data (the analysis document, story points, attention estimate), comments, and status-aware next steps. Use when the user asks about a specific story or wants to see story details."
 allowed-tools: mcp__storyflow__get-story, mcp__storyflow__add-story-comment, Read
 argument-hint: "<story-id>"
 ---
@@ -37,14 +37,10 @@ If no ID is provided, ask the user for one. Suggest loading a briefing first wit
    [Full user story with acceptance criteria as returned by get-story]
 
    ## Refinement
-   Complexity: [complexity] | Risk: [risk]
+   Story Points: [points or "not estimated"] | Attention estimate: [estimate or "not estimated"]
 
-   ### Analysis
-   [The refinement report - this is a detailed implementation analysis,
-    not a list of acceptance criteria]
-
-   ### Concerns
-   [List concerns with their severity level: WARNING or INFO]
+   [The refinement document as returned by get-story: analysis, implementation
+    considerations, attention points, and dependencies]
    ```
 
    If no refinement data exists, show: "This story has not been refined yet."

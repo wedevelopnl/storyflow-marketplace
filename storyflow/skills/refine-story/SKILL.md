@@ -35,8 +35,8 @@ If no ID is provided, ask the user for one. Suggest loading a briefing first wit
 ### 2. Fetch Refinement Guidelines
 
 Call `mcp__storyflow__get-refinement-guidelines`. This returns the complete refinement context:
-- **Output Format**: MCP tool parameters, report structure, concerns format
-- **Scoring & Synthesis Approach**: Complexity, risk, story points, synthesis methodology
+- **Output Format**: MCP tool parameters, document structure
+- **Scoring & Synthesis Approach**: Story points, synthesis methodology
 - **Agent Perspectives**: Prompts for Backend Engineer, Frontend Engineer, Security Expert, QA Engineer, DevOps Engineer
 - **Workflow**: Triage, subagent dispatch template, synthesis rules, and results display format
 
@@ -48,6 +48,5 @@ Follow the Workflow section from the guidelines:
 
 1. **Triage**: Select agent perspectives based on story content
 2. **Dispatch**: Launch parallel Explore subagents per perspective using the template from the guidelines
-3. **Synthesize**: Combine results following the Scoring & Synthesis Approach
-4. **Save**: Call `mcp__storyflow__refine-story` with synthesized results
-5. **Report**: Display results and suggest available transitions
+3. **Synthesize & save**: Combine the agent findings into one markdown document and save it with `refine-story`
+4. **Report**: Display results and suggest available transitions

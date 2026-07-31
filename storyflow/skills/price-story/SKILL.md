@@ -29,7 +29,7 @@ If the story already has a price, show the existing price and ask whether to re-
 ### 2. Fetch pricing guidelines
 
 Call `mcp__storyflow__get-pricing-guidelines`. This returns:
-- Hour estimation ranges per complexity level
+- Hour estimation ranges
 - Risk buffer guidance
 - The agency's hourly rate and price calculation formula
 
@@ -37,7 +37,7 @@ These guidelines are the single source of truth for pricing.
 
 ### 3. Calculate price
 
-Using the story's refinement data (complexity, risk, story points, report) and the pricing guidelines:
+Using the story's refinement data (the analysis document and story points) and the pricing guidelines:
 
 1. Estimate the hours following the guideline ranges
 2. Apply risk buffers as specified
@@ -53,8 +53,6 @@ Present the pricing proposal using `AskUserQuestion`. **Wait for confirmation be
 
 | | |
 |---|---|
-| Complexity | [complexity] |
-| Risk | [risk] |
 | Story Points | [points] |
 | Estimated Hours | [hours] |
 | Hourly Rate | EUR [rate] |

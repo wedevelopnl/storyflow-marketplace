@@ -25,7 +25,7 @@ If no ID is provided, ask the user for one. Suggest running `/storyflow:briefing
    - Call `mcp__storyflow__get-briefing` with the provided ID.
    - Call `mcp__storyflow__get-briefing-stories` with the briefing ID.
 
-   Do NOT call `get-story` for individual stories. The stories list already contains status, priority, price, complexity, and risk. Use `/storyflow:story <key>` when the user wants to dive into a specific story.
+   Do NOT call `get-story` for individual stories. The stories list already contains status, priority, price, and story points. Use `/storyflow:story <key>` when the user wants to dive into a specific story.
 
 3. **Display briefing dashboard**:
 
@@ -45,9 +45,9 @@ If no ID is provided, ask the user for one. Suggest running `/storyflow:briefing
 
    ## Stories ([count])
 
-   | # | Story | Status | Priority | Price | Complexity | Risk |
-   |---|-------|--------|----------|-------|------------|------|
-   | [key] | [title] | [status] | [priority] | [price or -] | [complexity or -] | [risk or -] |
+   | # | Story | Status | Priority | Price | Story Points |
+   |---|-------|--------|----------|-------|--------------|
+   | [key] | [title] | [status] | [priority] | [price or -] | [points or -] |
 
    ## Next Steps
    [State-aware guidance, see below]

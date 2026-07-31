@@ -4,6 +4,15 @@ All notable changes to the StoryFlow plugin will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 6.0.0 - 2026-07-28
+
+### BREAKING CHANGES
+
+**Refinement is now one document.** `refine-story` no longer accepts `risk` or `report`: both required parameters are gone. It saves a single markdown `content` argument instead, covering analysis, implementation considerations, attention points, and dependencies, plus the story-points justification, instead of separate complexity, risk, report, and concerns parameters. It also accepts an optional `attentionEstimate` (a shorthand duration such as "4h" or "1.5d") alongside `storyPoints`; both are omitted when there is nothing to change. This is a major version under semver: an agent working from a cached tool list, or a user's own automation calling `refine-story` directly, will fail on the removed required parameters even though the shipped skills move in lockstep.
+
+- `refine-story` and `refine-briefing` skills: guidance points at the single-document format, dropping the old concerns-format and per-field synthesis instructions.
+- `story`, `briefing`, `implement-briefing`, and `price-story` skills: refinement summaries and pricing inputs show the refinement document and story points instead of complexity and risk.
+
 ## 5.0.0 - 2026-07-27
 
 ### BREAKING CHANGES

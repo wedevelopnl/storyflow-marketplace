@@ -39,6 +39,6 @@ Call `mcp__storyflow__get-refinement-guidelines` (once, reuse for all stories). 
 Follow the Batch Refinement section from the guidelines Workflow:
 
 1. **Confirm scope**: Show stories to be refined, wait for confirmation
-2. **Refine each story**: Triage, dispatch, synthesize, save per the Workflow. Show progress.
+2. **Refine each story**: Triage, dispatch subagents, combine the agent findings into one markdown document, and save it with `refine-story` per the Workflow. Show progress.
 3. **Summary table**: Display all results
 4. **Next steps**: Fetch the stories again and suggest their available transitions. The briefing itself has no transitions: its derived state follows the stories.

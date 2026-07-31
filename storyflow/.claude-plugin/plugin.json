@@ -1,6 +1,6 @@
 {
   "name": "storyflow",
-  "version": "5.0.0",
+  "version": "6.0.0",
   "description": "StoryFlow integration for Software Architects: browse briefings, turn them into stories, and generate implementation plans from client requirements",
   "author": {
     "name": "WeDevelop",

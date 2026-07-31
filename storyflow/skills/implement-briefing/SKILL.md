@@ -34,15 +34,15 @@ If no ID is provided, ask the user for one. Suggest running `/storyflow:briefing
    - If found but `working_dir` is missing: ask the user for the local path to that asset, or offer to skip and continue with `$CLAUDE_PROJECT_DIR`.
    - If not found in the configured assets: warn the user that the briefing belongs to an asset outside this project's config, and ask whether to continue against the current cwd or stop.
 
-4. **Load full story details**: For each story, call `mcp__storyflow__get-story` to get the complete description (user story + acceptance criteria) and refinement data (report + concerns). Run these calls in parallel.
+4. **Load full story details**: For each story, call `mcp__storyflow__get-story` to get the complete description (user story + acceptance criteria) and refinement data (the analysis document and story points). Run these calls in parallel.
 
-   Why: `get-briefing-stories` only returns titles, status, price, and complexity/risk. The briefing-planner agent needs the full descriptions and acceptance criteria to generate a good plan.
+   Why: `get-briefing-stories` only returns titles, status, price, and story points. The briefing-planner agent needs the full descriptions and acceptance criteria to generate a good plan.
 
 5. **Prepare agent prompt**: Compile all briefing and story data into a structured prompt for the briefing-planner agent. Include:
    - Briefing title, derived state, customer, asset name and key
    - The asset's `working_dir` (so the agent knows where to explore)
    - Full briefing document (functional specification from Virtual PO chat)
-   - Full story list with titles, descriptions, acceptance criteria, refinement reports, concerns, complexity, priority
+   - Full story list with titles, descriptions, acceptance criteria, refinement documents, story points, priority
 
 6. **Launch briefing-planner agent**: Use the Agent tool with `subagent_type: "storyflow:briefing-planner"` to generate the implementation plan. Pass the compiled briefing+story data as the prompt. Ask the agent to operate in the asset's `working_dir`. The agent will independently explore that codebase and generate the plan.
 

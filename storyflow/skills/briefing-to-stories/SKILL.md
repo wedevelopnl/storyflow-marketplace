@@ -20,7 +20,7 @@ If no ID is provided, ask the user for one. Suggest running `/storyflow:briefing
 
 ### 1. Load project context
 
-Read `.storyflow/config.json` to get `project.customer_name`, `project.name`, and `project.assets[]`.
+Read `.storyflow/config.json` to get `customer.name` and `assets[]`.
 - If the file does not exist: tell the user to run `/storyflow:setup` first. Do not proceed without config.
 
 ### 2. Load briefing and resolve its asset
@@ -29,7 +29,7 @@ Call `mcp__storyflow__get-briefing` with the provided ID.
 
 **Validate eligibility**: story generation is **one-shot**. A briefing has no status; the preconditions are that it is not archived, has no stories yet, and that you hold the agency permission to create stories on it. All three live in the backend, so `create-briefing-stories` is the authority: if it refuses, relay its error message verbatim and stop. Use the derived state in the response as an early signal (`in_opmaak` and `overgedragen` with `0/0 stories` are the normal starting points), not as a hard gate.
 
-**Locate the briefing's asset in config**: Match the briefing's asset id against `project.assets[].id`.
+**Locate the briefing's asset in config**: Match the briefing's asset id against `assets[].id`.
 
 - If found: use that asset's `name` and `working_dir` for the codebase analysis below.
 - If `working_dir` is missing: ask the user for the local path, or fall back to `$CLAUDE_PROJECT_DIR` with a warning.

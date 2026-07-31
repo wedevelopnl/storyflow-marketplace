@@ -1,14 +1,16 @@
 ---
 name: setup
-description: "Configure the StoryFlow plugin for the current project by linking it to a customer and one or more assets. Auto-detects the project via Git URL, fetches all assets in the project, captures their working directories, and writes config. Use when setting up StoryFlow for the first time in a project."
+description: "Configure the StoryFlow plugin for the current codebase by linking it to its asset. Auto-detects the asset via the git remote URL and writes config. Use when setting up StoryFlow for the first time in a project."
 disable-model-invocation: true
-allowed-tools: mcp__storyflow__get-current-user, mcp__storyflow__get-asset-by-url, mcp__storyflow__list-assets, mcp__storyflow__list-projects, mcp__storyflow__get-asset, Read, Write, Glob, AskUserQuestion, Bash
+allowed-tools: mcp__storyflow__get-current-user, mcp__storyflow__get-asset-by-url, mcp__storyflow__list-assets, mcp__storyflow__list-customers, mcp__storyflow__get-asset, Read, Write, Glob, AskUserQuestion, Bash
 argument-hint: ""
 ---
 
 # StoryFlow Setup
 
-Configure the StoryFlow plugin for the current project. A StoryFlow project belongs to one customer and contains zero or more assets (codebases). The plugin works with the project as a whole and resolves the active asset per command based on the current working directory.
+Link this codebase to its StoryFlow **asset**. An asset is a codebase belonging to one customer, and it is the only thing a local checkout maps onto one-to-one.
+
+Setup does **not** ask for a project. An asset is worked on under any number of projects at the same time (a redesign, a maintenance retainer, a release train), so "the project of this checkout" has no answer. Project is a property of the work, not of the directory: briefings, stories, epics, initiatives and releases pick one at the moment they are created, from the projects that contain the active asset. See `${CLAUDE_PLUGIN_ROOT}/references/project-selection.md`.
 
 ## Process
 
@@ -24,78 +26,63 @@ Configure the StoryFlow plugin for the current project. A StoryFlow project belo
 
    On success, greet the user by name (from the response) and confirm the connection works.
 
-2. **Detect the project from this codebase**:
+2. **Detect the asset from this codebase**:
 
    Run `git remote get-url origin` to get the repository URL. Then call `get-asset-by-url` with that URL.
 
-   - **If a match is found**: Show the asset name, customer, project name, and asset type. Confirm with the user. Capture `project.id`, `project.key`, `project.name`, `customer.id`, `customer.name` from the response.
-   - **If no match**: Fall back to step 3.
+   - **If a match is found**: show the asset name, key, type and customer, and confirm with the user. Capture `id`, `key`, `name`, `type`, repository URL and production URL of the asset, plus the customer's `id` and `name`.
+   - **If no match**: fall back to step 3.
 
-3. **Manual project selection** (only if auto-detect failed): Call `list-projects` and present the available projects (grouped by customer). Ask the user which project this codebase belongs to. If none match, suggest they add the asset in StoryFlow first with the correct repository URL, then re-run setup.
+3. **Manual asset selection** (only if auto-detect failed): call `list-assets` and let the user pick with `AskUserQuestion`. Group the options by customer. Then tell them to fill in the repository URL on that asset in StoryFlow, so the next checkout detects itself.
 
-4. **Fetch all assets in the project**:
+   If no asset fits, the codebase has no asset in StoryFlow yet: tell the user to create one there (with this repository URL) and re-run setup. Do not write a config without an asset.
 
-   Call `list-assets` with the `customerId` filter (and `projectId` if the MCP supports it; otherwise filter the result locally on `project.id` or `project_id`). Capture the full asset list for the project: `id`, `key`, `name`, `type`, `repository_url`, `production_url`.
+4. **Configure output directory**: use `AskUserQuestion` to ask where StoryFlow should save generated files (implementation plans, etc.). Suggest `docs/storyflow/` as default. **Wait for the user's response before proceeding.** The path is relative to this project root.
 
-   - **0 assets**: the project has no assets yet. Continue, the config will store an empty `assets` array. Most skills will refuse to run until at least one asset is configured.
-   - **1 or more assets**: continue to step 5.
-
-5. **Capture working directories**:
-
-   For each asset:
-
-   - If the asset's `repository_url` matches the current `git remote get-url origin`: pre-fill `working_dir` with `$CLAUDE_PROJECT_DIR` (current project root). Do not ask, just confirm in the summary.
-   - For every other asset: use `AskUserQuestion` to ask the user for the local checkout path, with options:
-     - "Skip this asset for now" (leaves `working_dir` unset)
-     - A free-text path (option label "Other" auto-provided)
-
-   Working directories must be absolute paths. If the user provides a relative path, resolve it against `$HOME`.
-
-6. **Configure output directory**: Use `AskUserQuestion` to ask where StoryFlow should save generated files (implementation plans, etc.). Suggest `docs/storyflow/` as default. **Wait for the user's response before proceeding.**
-
-   - The path is relative to the project root of whichever asset the user is currently in.
-
-7. **Create config file**: Create the `.storyflow/` directory if it doesn't exist, then write `.storyflow/config.json`:
+5. **Create config file**: create the `.storyflow/` directory if it doesn't exist, then write `.storyflow/config.json`:
 
 ```json
 {
-  "version": 1,
-  "project": {
-    "id": "<project-uuid>",
-    "key": "<project-key>",
-    "name": "<project-name>",
-    "customer_id": "<customer-uuid>",
-    "customer_name": "<customer-name>",
-    "assets": [
-      {
-        "id": "<asset-uuid>",
-        "key": "<asset-key>",
-        "name": "<asset-name>",
-        "type": "<asset-type>",
-        "repository_url": "<repo-url>",
-        "production_url": "<prod-url-or-null>",
-        "working_dir": "<absolute-local-path-or-null>"
-      }
-    ]
+  "version": 2,
+  "customer": {
+    "id": "<customer-uuid>",
+    "name": "<customer-name>"
   },
+  "assets": [
+    {
+      "id": "<asset-uuid>",
+      "key": "<asset-key>",
+      "name": "<asset-name>",
+      "type": "<asset-type>",
+      "repository_url": "<repo-url>",
+      "production_url": "<prod-url-or-null>",
+      "working_dir": "<absolute-path-to-this-checkout>"
+    }
+  ],
   "output_dir": "docs/storyflow"
 }
 ```
 
-   - `assets` is always an array, even with 0 or 1 entries.
-   - `working_dir` may be `null` for assets the user hasn't checked out locally yet.
+   - `working_dir` of the detected asset is `$CLAUDE_PROJECT_DIR`, filled in without asking.
+   - `assets` is an array because one checkout can hold several assets (a monorepo whose parts are separate assets in StoryFlow). Setup writes the one it detected; a second entry is added by re-running setup from that codebase, or by hand.
    - `production_url` may be `null`.
+   - There is no `project` key. Anything that needs a project resolves it per action.
 
-8. **Verify .gitignore**: Read the project's `.gitignore` and check that `.storyflow/` is listed. If not, suggest adding it (the config contains project-specific IDs that should not be committed).
+6. **Verify .gitignore**: read the project's `.gitignore` and check that `.storyflow/` is listed. If not, suggest adding it (the config contains ids specific to this machine and checkout).
 
-9. **Confirm**: Tell the user setup is complete. Show a summary:
+7. **Confirm**: tell the user setup is complete. Show a summary:
 
    ```
-   Project: [project name] ([key])
    Customer: [customer name]
-   Assets configured: [N]
-     - [asset name] ([key])  cwd: [working_dir or "not set"]
-     ...
+   Asset:    [asset name] ([key], [type])
+   Checkout: [working_dir]
+   Output:   [output_dir]
    ```
 
    Suggest starting a new session to see the SessionStart context, and using `/storyflow:briefings` to see available work.
+
+## Reconfiguring
+
+Re-running setup on a codebase that already has `.storyflow/config.json` rewrites it. Read the existing file first and keep `output_dir` plus any extra asset entries whose `working_dir` still exists, so a monorepo setup is not lost.
+
+A config with `"version": 1` (or with a top-level `project` key) predates the project-free model. Rewrite it to version 2: take `project.customer_id` / `project.customer_name` as the customer, keep only the asset entries that have a `working_dir`, and drop the project fields.

@@ -2,7 +2,7 @@
 name: create-briefing
 description: "Create a new briefing in StoryFlow from conversation context, plan files, or free text. Fetches guidelines, drafts a structured briefing document, iterates with the architect, and uploads after approval."
 disable-model-invocation: true
-allowed-tools: mcp__storyflow__get-briefing-guidelines, mcp__storyflow__create-briefing, mcp__storyflow__get-briefing, Read, Glob, Grep, Bash, Agent, AskUserQuestion
+allowed-tools: mcp__storyflow__get-briefing-guidelines, mcp__storyflow__list-projects, mcp__storyflow__create-briefing, mcp__storyflow__get-briefing, Read, Glob, Grep, Bash, Agent, AskUserQuestion
 argument-hint: "[description or path to plan file]"
 ---
 
@@ -21,21 +21,24 @@ If no argument is provided and there is relevant context from the current conver
 
 ## Process
 
-### 0. Load project context and resolve active asset
+### 0. Load config and resolve active asset
 
 Read `.storyflow/config.json`.
 
 - If the file does not exist: tell the user to run `/storyflow:setup` first. Do not proceed without config.
+- If it has a top-level `project` key (version 1): tell the user to re-run `/storyflow:setup` to update the config, and stop.
 
-Capture `project.id` (as `projectId`), `project.customer_id`, `project.customer_name`, and `project.assets[]`.
+Capture `customer.id` (as `customerId`), `customer.name`, and `assets[]`.
 
 **Resolve the active asset** (the asset the new briefing will belong to):
 
-- If `project.assets` is empty: stop and tell the user this project has no assets configured. A briefing must belong to an asset, so they need to add one in StoryFlow and re-run `/storyflow:setup`.
+- If `assets` is empty: stop and tell the user to re-run `/storyflow:setup`. A briefing must belong to an asset.
 - If exactly one asset: that's the active asset.
 - If multiple assets: match `$CLAUDE_PROJECT_DIR` against each asset's `working_dir` (exact match, or cwd inside `working_dir`). If exactly one matches, that's the active asset. Otherwise use `AskUserQuestion` to let the user pick from the asset names.
 
 Capture the active asset's `id` as `assetId` and `name` as `assetName`. Use `assetName` everywhere the document references the asset.
+
+The project is **not** resolved here. It is resolved in step 7, right before upload, so the user picks it with the finished briefing in view.
 
 ### 1. Fetch guidelines
 
@@ -115,12 +118,13 @@ Ready to upload to StoryFlow? You can:
 
 Iterate until the user says "upload" or equivalent confirmation.
 
-### 7. Upload
+### 7. Resolve the project, then upload
 
 After the user approves:
 
-1. Call `mcp__storyflow__create-briefing` with `projectId`, `assetId`, `title`, and `content` (the full document as markdown)
-2. Extract the briefing ID from the response
+1. Resolve the project this briefing is booked under, following `${CLAUDE_PLUGIN_ROOT}/references/project-selection.md`: call `mcp__storyflow__list-projects` with `assetId` (the active asset), `customerId` and `status: "active"`, use the single result silently, ask when there are several, and stop with an explanation when there are none.
+2. Call `mcp__storyflow__create-briefing` with the resolved `projectId`, plus `assetId`, `title`, and `content` (the full document as markdown)
+3. Extract the briefing ID from the response
 
 ### 8. Verify and report
 

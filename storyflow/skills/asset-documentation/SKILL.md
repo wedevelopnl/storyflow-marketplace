@@ -25,9 +25,9 @@ Examples:
 
    - If the file does not exist: tell the user to run `/storyflow:setup` first and stop.
 
-   Inspect `project.assets[]`:
+   Inspect `assets[]`:
 
-   - If empty: stop and tell the user this project has no assets configured. Documentation needs an asset to attach to.
+   - If empty: stop and tell the user no asset is configured. Documentation needs an asset to attach to; re-run `/storyflow:setup`.
    - If exactly one asset: that's the active asset.
    - If multiple assets: match `$CLAUDE_PROJECT_DIR` against each asset's `working_dir` (exact match, or cwd inside `working_dir`). If exactly one matches, that's the active asset. Otherwise use `AskUserQuestion` to let the user pick from the asset names. **Documentation always reflects the codebase you're currently in**, so the cwd match is the strongest signal. Warn the user if their pick mismatches the cwd.
 

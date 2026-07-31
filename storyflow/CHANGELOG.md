@@ -4,6 +4,36 @@ All notable changes to the StoryFlow plugin will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 7.0.0 - 2026-08-01
+
+### BREAKING CHANGES
+
+**The config no longer holds a project.** `.storyflow/config.json` is now version 2: a `customer` object plus an `assets` array at the top level, with no `project` key. An existing version-1 config is not read; the SessionStart hook and every skill ask for `/storyflow:setup` to be re-run, which rewrites the file.
+
+```json
+{
+  "version": 2,
+  "customer": { "id": "...", "name": "..." },
+  "assets": [{ "id": "...", "key": "...", "name": "...", "working_dir": "..." }],
+  "output_dir": "docs/storyflow"
+}
+```
+
+The reason: an asset belongs to many projects at once, so "the project of this checkout" has no answer. Setup asked it anyway and could not auto-detect it, leaving the user to guess between a redesign project, a maintenance retainer and a release-train project for the same codebase. Project is a property of the work, not of the directory.
+
+- `setup`: detects the asset from the git remote and stops there. No project question, and no questions about the checkout paths of other assets. The detected asset's `working_dir` is filled in silently.
+- `create-briefing`: resolves the project right before upload, from the projects containing the active asset. One candidate is used silently, several prompt, none stops with an explanation.
+- New reference `references/project-selection.md`: the rule for every artefact that needs a project (briefing, story, epic, initiative, release).
+
+### Changed
+
+- All skills read `customer.*` and `assets[]` instead of `project.*`.
+- SessionStart hook labels the session as customer / asset, and recognises a version-1 config as outdated.
+
+### Requires
+
+StoryFlow backend with `list-projects` accepting an `assetId` filter, and `list-projects` available to customer users.
+
 ## 6.0.0 - 2026-07-28
 
 ### BREAKING CHANGES

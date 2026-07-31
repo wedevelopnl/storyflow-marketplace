@@ -20,19 +20,19 @@ except Exception:
     print('StoryFlow: Config file is not valid JSON. Run /storyflow:setup to reconfigure.')
     sys.exit(0)
 
-project = cfg.get('project') or {}
-customer = project.get('customer_name', '')
-project_name = project.get('name', '')
-assets = project.get('assets') or []
+if cfg.get('project') is not None:
+    print('StoryFlow: Config predates the project-free model. Run /storyflow:setup to reconfigure.')
+    sys.exit(0)
 
-if not customer:
+label = (cfg.get('customer') or {}).get('name', '')
+assets = cfg.get('assets') or []
+
+if not label:
     print('StoryFlow: Config found but incomplete. Run /storyflow:setup to reconfigure.')
     sys.exit(0)
 
-label = customer if not project_name else customer + ' / ' + project_name
-
 if not assets:
-    print('StoryFlow: Connected to ' + label + ' (no assets configured). Run /storyflow:setup once an asset is added in StoryFlow.')
+    print('StoryFlow: Connected to ' + label + ' (no asset configured). Run /storyflow:setup to link this checkout to its asset.')
     sys.exit(0)
 
 # Resolve active asset via cwd match against each asset's working_dir.
@@ -49,7 +49,7 @@ if len(matches) == 1:
     if len(assets) == 1:
         print('StoryFlow: Connected to ' + label + ' / ' + active + '. Use /storyflow:briefings to see available work.')
     else:
-        print('StoryFlow: Connected to ' + label + ' / ' + active + ' (' + str(len(assets)) + ' assets in project). Use /storyflow:briefings to see available work.')
+        print('StoryFlow: Connected to ' + label + ' / ' + active + ' (' + str(len(assets)) + ' assets configured). Use /storyflow:briefings to see available work.')
 elif len(matches) > 1:
     names = ', '.join(m.get('name', '?') for m in matches)
     print('StoryFlow: Connected to ' + label + '. Multiple assets match this directory (' + names + '); resolve manually per command.')
@@ -66,5 +66,5 @@ else:
 elif [ -f "$LEGACY_CONFIG" ]; then
   echo "StoryFlow: Legacy config detected (.claude/storyflow.local.md). Run /storyflow:setup to reconfigure."
 else
-  echo "StoryFlow plugin is installed but not configured for this project. Run /storyflow:setup to link this project to a customer and its assets."
+  echo "StoryFlow plugin is installed but not configured for this project. Run /storyflow:setup to link this codebase to its StoryFlow asset."
 fi

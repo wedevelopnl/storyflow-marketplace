@@ -12,23 +12,23 @@ Show briefings, highlighting what needs attention.
 ## Arguments
 
 - No argument: scope to the active asset (resolved from cwd).
-- `--all`: list briefings for every configured asset in the project, grouped by asset.
+- `--all`: list briefings for every configured asset, grouped by asset.
 
 ## Process
 
 1. **Load config** (required): Read `.storyflow/config.json`. If the file does not exist: tell the user to run `/storyflow:setup` first and stop.
 
-   Capture `project.customer_id`, `project.customer_name`, `project.name`, and `project.assets[]`.
+   Capture `customer.id`, `customer.name`, and `assets[]`. If the file has a top-level `project` key (version 1), tell the user to re-run `/storyflow:setup` and stop.
 
 2. **Resolve scope**:
 
-   - If `project.assets` is empty: tell the user the project has no assets configured yet, suggest re-running `/storyflow:setup` once an asset has been added in StoryFlow, and stop.
+   - If `assets` is empty: tell the user to re-run `/storyflow:setup`, and stop.
    - If the user passed `--all`: scope is "all configured assets".
    - Else if exactly one asset is configured: scope is that asset.
    - Else (multiple assets, no `--all`):
      - Match `$CLAUDE_PROJECT_DIR` against each asset's `working_dir` (exact match, or cwd inside the working_dir).
      - If exactly one matches: scope is that asset.
-     - If none match or multiple match: use `AskUserQuestion` to let the user pick. Provide options for each asset and one extra option "All assets in this project".
+     - If none match or multiple match: use `AskUserQuestion` to let the user pick. Provide options for each asset and one extra option "All configured assets".
 
 3. **Fetch briefings**:
 

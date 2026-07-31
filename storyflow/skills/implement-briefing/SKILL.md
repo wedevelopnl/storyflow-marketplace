@@ -18,7 +18,7 @@ If no ID is provided, ask the user for one. Suggest running `/storyflow:briefing
 
 ## Process
 
-1. **Load project context** (required): Read `.storyflow/config.json` to get `project.customer_name`, `project.name`, `project.assets[]`, and `output_dir`.
+1. **Load config** (required): Read `.storyflow/config.json` to get `customer.name`, `assets[]`, and `output_dir`.
    - If the file does not exist: tell the user to run `/storyflow:setup` first. Do not proceed without config.
    - If `output_dir` is missing from config: suggest running `/storyflow:setup` again to configure it. Fall back to `docs/storyflow` if the user wants to proceed anyway.
 
@@ -28,7 +28,7 @@ If no ID is provided, ask the user for one. Suggest running `/storyflow:briefing
 
 3. **Determine the briefing's asset and its working directory**:
 
-   Take the briefing's asset id from the `get-briefing` response and find the matching entry in `project.assets[]`.
+   Take the briefing's asset id from the `get-briefing` response and find the matching entry in `assets[]`.
 
    - If found and the asset has a `working_dir`: that is where the briefing-planner agent will explore.
    - If found but `working_dir` is missing: ask the user for the local path to that asset, or offer to skip and continue with `$CLAUDE_PROJECT_DIR`.

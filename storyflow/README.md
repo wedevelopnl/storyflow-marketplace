@@ -90,7 +90,9 @@ Start Claude Code in your project directory and run:
 /storyflow:setup
 ```
 
-This links the current codebase to a StoryFlow project. A project belongs to one customer and contains zero or more assets (codebases). The plugin captures every asset in the project and resolves the active asset per command from the current working directory, so a single config supports both single-repo projects and projects spanning multiple repositories.
+This links the current codebase to its StoryFlow **asset**, detected from the git remote URL. An asset is a codebase belonging to one customer, and it is the only thing a checkout maps onto one-to-one.
+
+Setup does not ask which project the codebase belongs to, because there is no such thing: an asset is worked on under any number of projects at once (a redesign, a maintenance retainer, a release train). Project is a property of the work. Briefings, stories, epics, initiatives and releases pick one when they are created, from the projects that contain the asset (`list-projects` with `assetId`).
 
 ### Other MCP clients
 
@@ -100,8 +102,8 @@ The plugin targets Claude Code, but the StoryFlow MCP server works with any MCP 
 
 | Skill | Description |
 |-------|-------------|
-| `/storyflow:setup` | Configure plugin for the current project (customer + assets) |
-| `/storyflow:briefings [--all]` | List briefings for the active asset, or use `--all` for every project asset |
+| `/storyflow:setup` | Link this codebase to its StoryFlow asset |
+| `/storyflow:briefings [--all]` | List briefings for the active asset, or use `--all` for every configured asset |
 | `/storyflow:briefing <id>` | Smart briefing dashboard with state-aware next steps |
 | `/storyflow:story <id>` | Load individual story details with refinement data |
 | `/storyflow:create-briefing [description]` | Create a new briefing from conversation context, plan files, or free text |

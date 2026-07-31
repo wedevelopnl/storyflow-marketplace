@@ -13,7 +13,7 @@
       "name": "storyflow",
       "source": "./storyflow",
       "description": "Browse briefings, turn them into stories, and generate implementation plans from client requirements",
-      "version": "1.5.0"
+      "version": "7.0.0"
     }
   ]
 }

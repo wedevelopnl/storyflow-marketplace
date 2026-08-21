@@ -33,4 +33,4 @@ Inside a worktree:
 - Skills are instructions for an agent, not documentation for a human: state the correct behavior, never the history of what changed.
 - Every user-visible string in the skills and the SessionStart hook is English.
 - The version in `storyflow/.claude-plugin/plugin.json` and the plugin entry in `.claude-plugin/marketplace.json` move together.
-- Use the `deploy-plugin` skill to release. A change under `storyflow/` reaches users only on a new version, so never push one without a version bump. Repo tooling outside `storyflow/` (this file, `.gitignore`, `.claude/skills/`) ships nothing to users and pushes on its own.
+- Use the `deploy-plugin` skill to release. What users execute (skills, agents, hooks, `plugin.json`) reaches them only on a new version, so never push a change to it without a version bump. The CHANGELOG's `Unreleased` section and repo tooling (this file, `.gitignore`, `.claude/skills/`) run on nobody's machine and push on their own.

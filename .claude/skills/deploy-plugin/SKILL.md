@@ -15,12 +15,15 @@ Users install the plugin through Claude Code's marketplace system. Claude Code c
 
 ## Deployment steps
 
-### 1. Verify there are changes to deploy
+### 1. Verify you are on main and have changes to deploy
 
 ```bash
+git rev-parse --abbrev-ref HEAD
 git status
 git log origin/main..HEAD --oneline
 ```
+
+Deploy from `main` in the primary checkout only. Feature work happens in worktrees that never bump the version, so if the branch is not `main`, stop and tell the user to merge it into `main` first. See "Parallel work" in CLAUDE.md.
 
 If both are empty, stop and tell the user there is nothing to deploy. If only the second has output (committed but unpushed), skip to step 3.
 
@@ -78,6 +81,8 @@ Present the proposed bump before applying it:
 
 Update `version` in `storyflow/.claude-plugin/plugin.json`, and the plugin entry's `version` in `.claude-plugin/marketplace.json` so the two cannot drift apart.
 
+Then rename the `## Unreleased` heading in `storyflow/CHANGELOG.md` to `## <new-version> - <YYYY-MM-DD>`, and put a fresh empty `## Unreleased` above it for the next cycle. If the section is empty, the merged branches did not document their changes: write the entry now from the commits found in step 4.
+
 ```bash
 git add -A && git commit -m "chore(storyflow): bump version to <new-version>"
 ```
@@ -111,6 +116,7 @@ When the plugin change depends on a backend change, state it in the CHANGELOG en
 ## Important notes
 
 - Always bump the version. Without it, users do not receive the update.
+- The version number is chosen here and nowhere else. Branches write under `## Unreleased` and leave both `version` fields untouched, so two of them can never pick the same number.
 - Keep the version bump in its own commit, separate from the feature commits.
 - Always tag the release. The tag is how the next deploy determines what changed.
 - Never force-push: users may have cached a specific commit hash.

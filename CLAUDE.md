@@ -18,6 +18,16 @@ That split has one hard consequence: a plugin release that uses a new or changed
 
 `/storyflow:setup` writes `.storyflow/config.json` in the user's project. Version 2 holds a customer plus an assets array, and deliberately no project: an asset belongs to many projects at once, so a checkout cannot name one. Anything needing a project resolves it per action, per `storyflow/references/project-selection.md`.
 
+## Parallel work
+
+Sessions work on this plugin side by side, each in its own git worktree created with `EnterWorktree`. Those land in `.claude/worktrees/`, ignored by git and branched from `origin/main`. There is nothing to install in a fresh worktree.
+
+Inside a worktree:
+
+- Leave `version` alone in both `storyflow/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`. The number belongs to the release, and two branches choosing one at the same time always collide.
+- Document the change under the standing `## Unreleased` heading in `storyflow/CHANGELOG.md`. Keep the heading in place.
+- Finish by merging into `main` in the primary checkout. `deploy-plugin` runs there, turns `Unreleased` into the new version number, tags and pushes.
+
 ## Conventions
 
 - Skills are instructions for an agent, not documentation for a human: state the correct behavior, never the history of what changed.

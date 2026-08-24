@@ -10,7 +10,7 @@ argument-hint: ""
 
 Link this codebase to its StoryFlow **asset**. An asset is a codebase belonging to one customer, and it is the only thing a local checkout maps onto one-to-one.
 
-Setup does **not** ask for a project. An asset is worked on under any number of projects at the same time (a redesign, a maintenance retainer, a release train), so "the project of this checkout" has no answer. Project is a property of the work, not of the directory: briefings, stories, epics, initiatives and releases pick one at the moment they are created, from the projects that contain the active asset. See `${CLAUDE_PLUGIN_ROOT}/references/project-selection.md`.
+Setup does **not** ask for a project. An asset is worked on under any number of projects at the same time (a redesign, a maintenance retainer, a release train), so "the project of this checkout" has no answer. Project is a property of the work, not of the directory: briefings, stories, epics, initiatives and releases pick one at the moment they are created, from the projects that contain the active asset. `/storyflow:guide` has the rule for resolving one.
 
 ## Process
 

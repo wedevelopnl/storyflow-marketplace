@@ -6,7 +6,7 @@ A [Claude Code](https://docs.anthropic.com/en/docs/claude-code) plugin marketpla
 
 | Plugin | Description |
 |--------|-------------|
-| [storyflow](./storyflow/) | Browse briefings, turn them into stories, and generate implementation plans from client requirements |
+| [storyflow](./storyflow/) | The StoryFlow toolset for Software Architects: briefings, stories, refinement and pricing, with a guide to working with them |
 
 ## Quick Start
 

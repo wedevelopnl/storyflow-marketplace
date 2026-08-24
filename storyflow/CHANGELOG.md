@@ -6,9 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+### BREAKING CHANGES
+
+**The plugin is the MCP toolset plus four skills.** Nine skills and both agents are removed: `briefings`, `briefing`, `story`, `create-briefing`, `briefing-to-stories`, `implement-briefing`, `briefing-to-plan`, `asset-documentation`, `price-story`, `briefing-planner` and `codebase-analyzer`.
+
+What they wrapped is still there, and closer to the source. The MCP tool descriptions carry their own contracts: `create-briefing-stories` states that generation is one-shot, `price-story` states the calculation formula and that committing the price is a separate `transition-story` call. The agency's standards for briefings, stories, refinement, pricing and documentation come from the `get-*-guidelines` tools, so they now reach the architect without a plugin release.
+
+Remaining: `/storyflow:setup`, `/storyflow:guide`, `/storyflow:refine-story` and `/storyflow:refine-briefing`, plus the SessionStart hook.
+
+### Added
+
+- `/storyflow:guide`: the data model, the briefing's derived state and its three actions, the local config and how the active asset is resolved from the cwd, the project-resolution rule, a map of which guidelines tool to fetch before which task, the story lifecycle, and the two agreements no tool enforces (show before saving, story generation is one-shot). Model-invocable, so it loads when StoryFlow work comes up.
+
+### Changed
+
+- `setup` no longer asks for an output directory. `output_dir` had one consumer, `implement-briefing`, and the architect decides where local output lands. An existing config keeps the key; nothing reads it.
+- The SessionStart hook and `setup` point at `/storyflow:guide` instead of the removed briefing commands.
+
 ### Removed
 
-- All handling of pre-version-2 config is gone. The SessionStart hook no longer looks for `.claude/storyflow.local.md`, and neither the hook nor `setup`, `create-briefing` and `list-briefings` recognise a config with a top-level `project` key any more. Such a config now falls through the ordinary checks: the hook reports it as incomplete and the skills stop on an empty `assets` array, both pointing at `/storyflow:setup`. `setup` rewrites the file from scratch instead of migrating it.
+- All handling of pre-version-2 config. A config with a top-level `project` key is no longer recognised anywhere: the hook reports it as incomplete and `setup` rewrites it from scratch. The hook no longer looks for `.claude/storyflow.local.md` either.
+- `references/project-selection.md`, absorbed into `/storyflow:guide`.
 
 ## 7.0.0 - 2026-08-01
 

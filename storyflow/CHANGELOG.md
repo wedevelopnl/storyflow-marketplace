@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+## 8.0.0 - 2026-08-24
+
 ### BREAKING CHANGES
 
 **The plugin is the MCP toolset plus four skills.** Nine skills and both agents are removed: `briefings`, `briefing`, `story`, `create-briefing`, `briefing-to-stories`, `implement-briefing`, `briefing-to-plan`, `asset-documentation`, `price-story`, `briefing-planner` and `codebase-analyzer`.

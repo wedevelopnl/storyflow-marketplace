@@ -5,7 +5,6 @@
 set -euo pipefail
 
 CONFIG_FILE="$CLAUDE_PROJECT_DIR/.storyflow/config.json"
-LEGACY_CONFIG="$CLAUDE_PROJECT_DIR/.claude/storyflow.local.md"
 
 if [ -f "$CONFIG_FILE" ]; then
   message=$(CWD="$CLAUDE_PROJECT_DIR" python3 -c "
@@ -18,10 +17,6 @@ try:
         cfg = json.load(f)
 except Exception:
     print('StoryFlow: Config file is not valid JSON. Run /storyflow:setup to reconfigure.')
-    sys.exit(0)
-
-if cfg.get('project') is not None:
-    print('StoryFlow: Config predates the project-free model. Run /storyflow:setup to reconfigure.')
     sys.exit(0)
 
 label = (cfg.get('customer') or {}).get('name', '')
@@ -63,8 +58,6 @@ else:
   else
     echo "StoryFlow: Config found but could not be parsed. Run /storyflow:setup to reconfigure."
   fi
-elif [ -f "$LEGACY_CONFIG" ]; then
-  echo "StoryFlow: Legacy config detected (.claude/storyflow.local.md). Run /storyflow:setup to reconfigure."
 else
   echo "StoryFlow plugin is installed but not configured for this project. Run /storyflow:setup to link this codebase to its StoryFlow asset."
 fi

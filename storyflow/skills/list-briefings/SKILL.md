@@ -18,7 +18,7 @@ Show briefings, highlighting what needs attention.
 
 1. **Load config** (required): Read `.storyflow/config.json`. If the file does not exist: tell the user to run `/storyflow:setup` first and stop.
 
-   Capture `customer.id`, `customer.name`, and `assets[]`. If the file has a top-level `project` key (version 1), tell the user to re-run `/storyflow:setup` and stop.
+   Capture `customer.id`, `customer.name`, and `assets[]`.
 
 2. **Resolve scope**:
 

@@ -84,5 +84,3 @@ Setup does **not** ask for a project. An asset is worked on under any number of 
 ## Reconfiguring
 
 Re-running setup on a codebase that already has `.storyflow/config.json` rewrites it. Read the existing file first and keep `output_dir` plus any extra asset entries whose `working_dir` still exists, so a monorepo setup is not lost.
-
-A config with `"version": 1` (or with a top-level `project` key) predates the project-free model. Rewrite it to version 2: take `project.customer_id` / `project.customer_name` as the customer, keep only the asset entries that have a `working_dir`, and drop the project fields.

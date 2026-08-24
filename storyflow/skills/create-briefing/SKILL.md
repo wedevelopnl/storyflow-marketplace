@@ -26,7 +26,6 @@ If no argument is provided and there is relevant context from the current conver
 Read `.storyflow/config.json`.
 
 - If the file does not exist: tell the user to run `/storyflow:setup` first. Do not proceed without config.
-- If it has a top-level `project` key (version 1): tell the user to re-run `/storyflow:setup` to update the config, and stop.
 
 Capture `customer.id` (as `customerId`), `customer.name`, and `assets[]`.
 

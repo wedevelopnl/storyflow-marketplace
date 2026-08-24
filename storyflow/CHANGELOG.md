@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+### Removed
+
+- All handling of pre-version-2 config is gone. The SessionStart hook no longer looks for `.claude/storyflow.local.md`, and neither the hook nor `setup`, `create-briefing` and `list-briefings` recognise a config with a top-level `project` key any more. Such a config now falls through the ordinary checks: the hook reports it as incomplete and the skills stop on an empty `assets` array, both pointing at `/storyflow:setup`. `setup` rewrites the file from scratch instead of migrating it.
+
 ## 7.0.0 - 2026-08-01
 
 ### BREAKING CHANGES

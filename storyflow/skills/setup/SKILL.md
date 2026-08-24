@@ -37,9 +37,7 @@ Setup does **not** ask for a project. An asset is worked on under any number of 
 
    If no asset fits, the codebase has no asset in StoryFlow yet: tell the user to create one there (with this repository URL) and re-run setup. Do not write a config without an asset.
 
-4. **Configure output directory**: use `AskUserQuestion` to ask where StoryFlow should save generated files (implementation plans, etc.). Suggest `docs/storyflow/` as default. **Wait for the user's response before proceeding.** The path is relative to this project root.
-
-5. **Create config file**: create the `.storyflow/` directory if it doesn't exist, then write `.storyflow/config.json`:
+4. **Create config file**: create the `.storyflow/` directory if it doesn't exist, then write `.storyflow/config.json`:
 
 ```json
 {
@@ -58,8 +56,7 @@ Setup does **not** ask for a project. An asset is worked on under any number of 
       "production_url": "<prod-url-or-null>",
       "working_dir": "<absolute-path-to-this-checkout>"
     }
-  ],
-  "output_dir": "docs/storyflow"
+  ]
 }
 ```
 
@@ -68,19 +65,18 @@ Setup does **not** ask for a project. An asset is worked on under any number of 
    - `production_url` may be `null`.
    - There is no `project` key. Anything that needs a project resolves it per action.
 
-6. **Verify .gitignore**: read the project's `.gitignore` and check that `.storyflow/` is listed. If not, suggest adding it (the config contains ids specific to this machine and checkout).
+5. **Verify .gitignore**: read the project's `.gitignore` and check that `.storyflow/` is listed. If not, suggest adding it (the config contains ids specific to this machine and checkout).
 
-7. **Confirm**: tell the user setup is complete. Show a summary:
+6. **Confirm**: tell the user setup is complete. Show a summary:
 
    ```
    Customer: [customer name]
    Asset:    [asset name] ([key], [type])
    Checkout: [working_dir]
-   Output:   [output_dir]
    ```
 
-   Suggest starting a new session to see the SessionStart context, and using `/storyflow:briefings` to see available work.
+   Suggest starting a new session to see the SessionStart context, and running `/storyflow:guide` for how to work with StoryFlow from here.
 
 ## Reconfiguring
 
-Re-running setup on a codebase that already has `.storyflow/config.json` rewrites it. Read the existing file first and keep `output_dir` plus any extra asset entries whose `working_dir` still exists, so a monorepo setup is not lost.
+Re-running setup on a codebase that already has `.storyflow/config.json` rewrites it. Read the existing file first and keep any extra asset entries whose `working_dir` still exists, so a monorepo setup is not lost.

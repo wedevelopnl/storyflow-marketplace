@@ -14,7 +14,7 @@ Run multi-agent refinement analysis on all stories within a briefing.
 
 The user provides a briefing ID as argument: `/storyflow:refine-briefing <id>`
 
-If no ID is provided, ask the user for one. Suggest running `/storyflow:briefings` to see available briefings.
+If no ID is provided, ask the user for one. Call `mcp__storyflow__list-briefings` to show what is available.
 
 ## Process
 

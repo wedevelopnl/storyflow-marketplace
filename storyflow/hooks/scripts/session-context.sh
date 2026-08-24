@@ -42,9 +42,9 @@ for a in assets:
 if len(matches) == 1:
     active = matches[0].get('name', '?')
     if len(assets) == 1:
-        print('StoryFlow: Connected to ' + label + ' / ' + active + '. Use /storyflow:briefings to see available work.')
+        print('StoryFlow: Connected to ' + label + ' / ' + active + '. Run /storyflow:guide for how to work with it.')
     else:
-        print('StoryFlow: Connected to ' + label + ' / ' + active + ' (' + str(len(assets)) + ' assets configured). Use /storyflow:briefings to see available work.')
+        print('StoryFlow: Connected to ' + label + ' / ' + active + ' (' + str(len(assets)) + ' assets configured). Run /storyflow:guide for how to work with it.')
 elif len(matches) > 1:
     names = ', '.join(m.get('name', '?') for m in matches)
     print('StoryFlow: Connected to ' + label + '. Multiple assets match this directory (' + names + '); resolve manually per command.')

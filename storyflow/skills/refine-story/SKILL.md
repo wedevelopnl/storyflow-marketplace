@@ -14,7 +14,7 @@ Run multi-agent refinement analysis on a story and save the results.
 
 The user provides a story ID as argument: `/storyflow:refine-story <id>`
 
-If no ID is provided, ask the user for one. Suggest loading a briefing first with `/storyflow:briefing <id>` to see available stories.
+If no ID is provided, ask the user for one. Call `mcp__storyflow__get-briefing` or `mcp__storyflow__list-stories` to show what is available.
 
 ## Process
 

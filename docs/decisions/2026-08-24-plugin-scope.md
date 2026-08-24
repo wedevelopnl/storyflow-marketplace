@@ -53,9 +53,11 @@ graph LR
 
 ### The guide skill
 
-Model-invocable, so it loads when StoryFlow work comes up rather than waiting to be typed. Six sections: what StoryFlow is, the data model, the config and how the active asset is resolved from the cwd, the project-resolution rule, the map of guidelines tools, and the two working agreements no tool enforces (show before saving; story generation is one-shot per briefing).
+Model-invocable, so it loads when StoryFlow work comes up rather than waiting to be typed. It covers what StoryFlow is, the data model, the briefing's derived state, the config and how the active asset is resolved from the cwd, the project-resolution rule, the map of guidelines tools, the story lifecycle, and the two working agreements no tool enforces (show before saving; story generation is one-shot per briefing).
 
-It does not enumerate the story lifecycle. `get-story` returns the transitions available right now, and `transition-story` documents how to use them. Duplicating the state machine locally recreates exactly the drift this decision removes.
+The derived state of a briefing (`in_opmaak`, `overgedragen`, `afgerond`, and the rule that a cancelled or archived story is not relevant) and the briefing's three actions in place of transitions are domain facts that the tools render but never explain. They lived in `storyflow/README.md`, which this decision rewrites, so they move into the guide rather than being lost.
+
+The story lifecycle is named, but as orientation only. Which step is available for a given story comes from `get-story` at read time, which reports the transitions allowed for that story and that role. The guide says so explicitly, because a locally maintained copy of the state machine is exactly the drift this decision removes.
 
 ### Config
 

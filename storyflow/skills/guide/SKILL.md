@@ -27,7 +27,7 @@ graph TD
 - **Asset**: a codebase, tied to a git repository. Durable.
 - **Project**: a unit of work and budget, with a start and an end. An asset sits in any number of projects at once.
 - **Briefing**: the customer's intake. It has no status of its own; its state is derived from the stories made from it.
-- **Story**: the unit of work. Carries a status, a refinement and a price.
+- **Story**: the unit of work. Carries a type (`request`, `incident` or `problem`), a status, a refinement and a price. The type decides which status track applies.
 - **Epic**, **Initiative**, **Release**: grouping above the story.
 
 ## Briefings have no status
@@ -46,9 +46,9 @@ In place of transitions a briefing has three actions, each its own tool:
 
 | Tool | Effect |
 |---|---|
-| `cancel-briefing` | Records the reason as a visible comment, cancels the still-open stories, archives the briefing. One-way. |
-| `archive-briefing` | Drops it out of the default listings. Only once every linked story is delivered. |
-| `unarchive-briefing` | Restores it. Does not cascade, and does not undo a cancel. |
+| `cancel-briefing` | Records the reason as a visible comment and archives the briefing. The stories it seeded are left alone: cancel each one separately, via its own `cancel` transition, if the work is abandoned too. One-way, there is no uncancel. |
+| `archive-briefing` | Drops it out of the default listings. Only once every linked story is delivered (state `afgerond`). Archived briefings cannot be modified. Reversible. |
+| `unarchive-briefing` | Restores visibility. Stories archived along with it stay archived and must be unarchived individually via `transition-story`. Does not undo a cancel: the cancellation comment stays. |
 
 ## The local config
 
@@ -120,13 +120,19 @@ Do not work from a memory of what a guideline said in an earlier session.
 
 ## Statuses and transitions
 
-A story is a real state machine:
+A story is a real state machine, and which machine applies depends on its type. A `request` or `problem` story runs:
 
 `Draft -> Submitted -> Accepted -> Scoped -> Refined -> {Priced ->} ToDo -> Doing -> InReview -> Done`
 
 `Priced` is route-dependent. Projects whose billing model requires story pricing pass through it; fixed-price and non-billable projects move a refined story straight to `ToDo`.
 
-Do not assume which step is available from that diagram: `get-story` returns the transitions available for that story right now, along with the data each one needs, already checked against your role. `transition-story` performs one step, or walks to a target status in a single call.
+An `incident` never enters that track. It starts at `Open`, never `Draft`, and runs:
+
+`Open -> Acknowledged -> Investigating -> {Doing ->} Resolved -> Closed`
+
+`resolve` reaches `Resolved` from either `Investigating` or `Doing`, and `reopen` returns a `Resolved` or `Closed` incident to `Investigating`. An incident that turns out to be new work rather than a fault leaves via `promote-to-request`, which moves it to `Submitted` on the request track. `Cancelled` is terminal on every track.
+
+Do not assume which step is available from these lines: `get-story` returns the transitions available for that story right now, along with the data each one needs, already checked against your role. `transition-story` performs one step, or walks to a target status in a single call.
 
 Storing content and moving a story are separate actions. `refine-story` saves a refinement and `price-story` saves a price; neither changes the status. The matching transition commits it.
 

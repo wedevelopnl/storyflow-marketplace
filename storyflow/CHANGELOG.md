@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+### Fixed
+
+- `/storyflow:guide` claimed `cancel-briefing` cancels the still-open stories of a briefing. It does not. The stories a briefing seeded are separate entities with their own lifecycle and are deliberately left alone, so each one has to be cancelled through its own `cancel` transition. Acting on the old text left work running that the architect believed was stopped.
+- `/storyflow:guide` presented a single story lifecycle. A story carries a type: `request` and `problem` share the `Draft -> Submitted -> Accepted -> Scoped -> Refined -> {Priced ->} ToDo -> Doing -> InReview -> Done` track, while an `incident` starts at `Open` and runs `Open -> Acknowledged -> Investigating -> {Doing ->} Resolved -> Closed`, with `reopen` back to `Investigating` and `promote-to-request` when it turns out to be new work rather than a fault. The statuses of an incident appeared nowhere in the old text.
+
 ## 8.0.0 - 2026-08-24
 
 ### BREAKING CHANGES

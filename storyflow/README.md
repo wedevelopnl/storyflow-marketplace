@@ -54,7 +54,7 @@ The plugin targets Claude Code, but the StoryFlow MCP server works with any MCP 
 | Skill | Description |
 |-------|-------------|
 | `/storyflow:setup` | Link this codebase to its StoryFlow asset |
-| `/storyflow:guide` | How StoryFlow works: the data model, the local config, resolving a project, and which guidelines to fetch before writing |
+| `/storyflow:guide` | How StoryFlow works: the data model, the story lifecycle, briefings as intake, the local config, resolving a project, and which guidelines to fetch before writing |
 | `/storyflow:refine-story <id>` | Refine a single story with multi-agent analysis |
 | `/storyflow:refine-briefing <id>` | Refine all stories of a briefing with multi-agent analysis |
 

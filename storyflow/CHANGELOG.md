@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+## 8.0.1 - 2026-08-26
+
 ### Fixed
 
 - `/storyflow:guide` claimed `cancel-briefing` cancels the still-open stories of a briefing. It does not. The stories a briefing seeded are separate entities with their own lifecycle and are deliberately left alone, so each one has to be cancelled through its own `cancel` transition. Acting on the old text left work running that the architect believed was stopped.

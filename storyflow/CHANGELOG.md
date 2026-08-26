@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+## 8.0.2 - 2026-08-26
+
 ### Changed
 
 - `/storyflow:guide` now leads with the story. A briefing is intake: the customer describes what they want in a chat with the Virtual PO and never has to think in stories, and the agency turns that into the stories that carry the work. The old text gave briefings two tables and the story lifecycle a single closing section, which read as if the briefing were the unit of work.

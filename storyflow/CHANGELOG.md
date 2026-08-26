@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+### Changed
+
+- `/storyflow:guide` now leads with the story. A briefing is intake: the customer describes what they want in a chat with the Virtual PO and never has to think in stories, and the agency turns that into the stories that carry the work. The old text gave briefings two tables and the story lifecycle a single closing section, which read as if the briefing were the unit of work.
+- The data model is an `erDiagram` instead of a `graph TD`, so required and optional links are visible. Corrections it makes: a briefing hangs off an asset as well as a project and cannot exist without either; a story carries its own project and asset and inherits neither from a briefing; a story does not need a briefing at all; epics, initiatives and releases each sit under exactly one project; stories link to each other as `depends_on`, `related_to` or `duplicates`.
+
+### Fixed
+
+- `/storyflow:guide` claimed `unarchive-briefing` leaves stories archived that must then be unarchived through `transition-story`. Archiving a briefing never archived them, `transition-story` cannot unarchive a story, and no tool in the set does.
+- `/storyflow:guide` claimed a briefing whose stories were all cancelled falls back to `in_opmaak`. That holds only while the customer has not handed it over; once they have, it stays `overgedragen`.
+- `/storyflow:guide` described `promote-to-request` without its preconditions. The route is open only from `Open`, `Acknowledged` or `Investigating`, and only while the incident carries no price.
+- `/storyflow:guide` described a project as having a start and an end, and an asset as always being a codebase with a git repository. A project carries a billing model, an optional budget and a status; an asset's repository is optional.
+- `/storyflow:guide` did not mention the two gates that block an otherwise available transition: `approve` needs a project on the story, and `start` needs an assigned architect, which no tool in the set can set.
+
 ## 8.0.1 - 2026-08-26
 
 ### Fixed

@@ -1,6 +1,6 @@
 ---
 name: guide
-description: "How StoryFlow works and how to work with it: the data model, the story lifecycle, briefings as intake, the local config, resolving a project, and which guidelines to fetch before writing. Use whenever working with StoryFlow stories, briefings, epics, releases or refinement."
+description: "How StoryFlow works and how to work with it: the data model, the story lifecycle, briefings as intake, the local config, resolving a project, which guidelines to fetch before writing, and how the story key travels into branches, commits and merge requests. Use whenever working with StoryFlow stories, briefings, epics, releases or refinement."
 ---
 
 # Working with StoryFlow
@@ -156,8 +156,50 @@ The agency's standards for every artefact live in the backend, not in this plugi
 
 Do not work from a memory of what a guideline said in an earlier session.
 
-## Two things no tool enforces
+## Carrying the story key into git
+
+Every story has a readable key, `{CUSTOMER_CODE}-{number}`, and `get-story` returns it on its first line: `Story: WDV-42 - Brute force protection on login`. That key is the only thing tying a commit in the client's repository back to the refinement, the price and the customer conversation behind it. Once you know which story the work belongs to, carry the key through the whole trail.
+
+**Branch**: the key first, then a short slug.
+
+```
+WDV-42-rate-limit-login
+```
+
+Keep whatever prefix the repository already uses and put the key behind it: `feature/WDV-42-rate-limit-login`.
+
+**Commits**: Conventional Commits with the key as the scope.
+
+```
+feat(WDV-42): rate limit the login endpoint
+test(WDV-42): cover the lockout threshold
+fix(WDV-43): duplicate password reset mail
+```
+
+The type stays the repository's own vocabulary, because its tooling reads it to build changelogs and derive versions. Only the scope changes: the story key takes the place of the part of the codebase. One commit belongs to one story, so work spanning two stories is two commits.
+
+**Merge request**: the key, then the story title verbatim.
+
+```
+WDV-42: Brute force protection on login
+```
+
+Open the description with a line back to StoryFlow, so a reviewer reaches the refinement in one click. The link is `<portal_url>/go/story/<key>`, which for WeDevelop reads:
+
+```
+Story: [WDV-42](https://app.wedevelop.nl/go/story/WDV-42) - Brute force protection on login
+```
+
+Take the host from `portal_url` in the local config, never from this example: it is the agency's own domain and differs per agency. `/go/story/` accepts the key as well as the story UUID.
+
+One merge request carries one story. When the work genuinely spans several, list every key in the description and title the request after the story the reviewer should read first.
+
+Work with no story behind it, a chore in the repository itself or a fix the architect asked for directly, carries no key. Never invent one and never borrow a neighbouring story's key to make the trail look complete: a key on a commit claims the customer approved that work and is billed for it.
+
+## Three things no tool enforces
 
 **Show before you save.** Everything that reaches StoryFlow is read by the customer or billed to them. Present a briefing, a set of stories, a refinement or a price to the architect and wait for approval before calling the tool that writes it.
 
 **Story generation is one-shot.** `create-briefing-stories` runs once per briefing and refuses a second call. Get the whole set right before you send it.
+
+**Keep the board triaged.** No tool moves a story's status for you. After you work on one, check whether its status still matches reality before you move on, and correct it with `transition-story` if it does not. A board only stays useful if everyone leaves it truthful, not just their own story.

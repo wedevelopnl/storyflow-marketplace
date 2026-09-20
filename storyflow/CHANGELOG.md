@@ -13,6 +13,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - `.storyflow/config.json` version 3 carries `portal_url`, the host the agency's users log in on. StoryFlow is white-label, so that host is `https://app.wedevelop.nl` for one agency and another domain for the next; `https://app.storyflowhq.com` is only the fallback for an agency without a custom domain. Every user-facing StoryFlow link a skill writes is built on it, and both skills now refuse to guess a host. A version 2 config keeps working: the guide reads the host from `get-current-user` and suggests re-running setup.
+- `/storyflow:guide` now states how the story key reaches git. Once the work belongs to a known story, the branch leads with the key (`WDV-42-rate-limit-login`, behind whatever prefix the repository already uses), commits are Conventional Commits with the key as the scope (`feat(WDV-42): rate limit the login endpoint`), and the merge request is titled `WDV-42: <story title>` with a `/go/story/WDV-42` permalink in its description. One commit belongs to one story, one merge request carries one story, and work without a story carries no key: a key on a commit claims the customer approved that work and is billed for it.
+- `/storyflow:guide` now closes with a third thing no tool enforces: after working on a story, check its status still matches reality and correct it with `transition-story`. No tool moves a story's status on its own, so a stale status only gets fixed when the architect checks for it.
 
 ## 8.0.2 - 2026-08-26
 

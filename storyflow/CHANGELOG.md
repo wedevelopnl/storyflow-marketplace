@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+### Requires
+
+- StoryFlow backend with the portal url on `get-current-user`. The tool reports the agency's own host on a `Portal:` line, which `/storyflow:setup` writes to the config as `portal_url`. Without it setup has no host to store and falls back to asking.
+
+### Added
+
+- `.storyflow/config.json` version 3 carries `portal_url`, the host the agency's users log in on. StoryFlow is white-label, so that host is `https://app.wedevelop.nl` for one agency and another domain for the next; `https://app.storyflowhq.com` is only the fallback for an agency without a custom domain. Every user-facing StoryFlow link a skill writes is built on it, and both skills now refuse to guess a host. A version 2 config keeps working: the guide reads the host from `get-current-user` and suggests re-running setup.
+
 ## 8.0.2 - 2026-08-26
 
 ### Changed

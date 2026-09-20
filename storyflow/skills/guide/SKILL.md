@@ -89,7 +89,8 @@ In place of transitions a briefing has three actions: `cancel-briefing`, `archiv
 
 ```json
 {
-  "version": 2,
+  "version": 3,
+  "portal_url": "<portal-url>",
   "customer": { "id": "<uuid>", "name": "<name>" },
   "assets": [
     {
@@ -106,6 +107,10 @@ In place of transitions a briefing has three actions: `cancel-briefing`, `archiv
 ```
 
 If the file is missing or incomplete, run `/storyflow:setup`.
+
+**The portal url**: `portal_url` is the host this agency's users log in on. StoryFlow is white-label, so it differs per agency: `https://app.wedevelop.nl` for WeDevelop, another domain for the next agency, and `https://app.storyflowhq.com` only for an agency without a custom domain. Every user-facing StoryFlow link you write is built on it.
+
+Never hardcode a host and never guess one. A config written before version 3 has no `portal_url`: call `get-current-user`, which reports the host on its `Portal:` line, and suggest re-running `/storyflow:setup` so the config catches up.
 
 **Resolving the active asset**: match the current working directory against each asset's `working_dir`, either exactly or as a parent directory. One match is the active asset. Several matches or none: ask which asset to use, do not guess. `assets` is an array because one checkout can hold several assets, as in a monorepo whose parts are separate assets in StoryFlow.
 

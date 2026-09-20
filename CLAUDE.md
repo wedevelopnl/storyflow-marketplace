@@ -16,7 +16,9 @@ That split has one hard consequence: a plugin release that uses a new or changed
 
 ## Config the plugin writes
 
-`/storyflow:setup` writes `.storyflow/config.json` in the user's project. Version 2 holds a customer plus an assets array, and deliberately no project: an asset belongs to many projects at once, so a checkout cannot name one. Anything needing a project resolves it per action, per `storyflow/references/project-selection.md`.
+`/storyflow:setup` writes `.storyflow/config.json` in the user's project. Version 3 holds a customer, an assets array and `portal_url`, and deliberately no project: an asset belongs to many projects at once, so a checkout cannot name one. Anything needing a project resolves it per action, per the rule in `/storyflow:guide`.
+
+`portal_url` is the agency's own host, read from the `Portal:` line of `get-current-user`. StoryFlow is white-label, so every user-facing link a skill writes has to be built on it; `app.storyflowhq.com` is the platform fallback, not the norm.
 
 ## Parallel work
 

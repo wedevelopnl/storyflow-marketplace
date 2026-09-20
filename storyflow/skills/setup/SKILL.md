@@ -24,7 +24,7 @@ Setup does **not** ask for a project. An asset is worked on under any number of 
 
    **b)** If connection still fails, check that the plugin's MCP server is loaded. Run `/mcp` to verify the "storyflow" server appears.
 
-   On success, greet the user by name (from the response) and confirm the connection works.
+   On success, greet the user by name (from the response) and confirm the connection works. Keep the `Portal:` line from the response: that is the host this agency's users log in on, and step 4 writes it to the config.
 
 2. **Detect the asset from this codebase**:
 
@@ -41,7 +41,8 @@ Setup does **not** ask for a project. An asset is worked on under any number of 
 
 ```json
 {
-  "version": 2,
+  "version": 3,
+  "portal_url": "<portal-url>",
   "customer": {
     "id": "<customer-uuid>",
     "name": "<customer-name>"
@@ -63,6 +64,7 @@ Setup does **not** ask for a project. An asset is worked on under any number of 
    - `working_dir` of the detected asset is `$CLAUDE_PROJECT_DIR`, filled in without asking.
    - `assets` is an array because one checkout can hold several assets (a monorepo whose parts are separate assets in StoryFlow). Setup writes the one it detected; a second entry is added by re-running setup from that codebase, or by hand.
    - `production_url` may be `null`.
+   - `portal_url` is the `Portal:` line from `get-current-user`, without a trailing slash. It is the agency's own host (`https://app.wedevelop.nl`) unless the agency has no custom domain, in which case it is the platform host (`https://app.storyflowhq.com`). Never type a host of your own.
    - There is no `project` key. Anything that needs a project resolves it per action.
 
 5. **Verify .gitignore**: read the project's `.gitignore` and check that `.storyflow/` is listed. If not, suggest adding it (the config contains ids specific to this machine and checkout).
@@ -73,6 +75,7 @@ Setup does **not** ask for a project. An asset is worked on under any number of 
    Customer: [customer name]
    Asset:    [asset name] ([key], [type])
    Checkout: [working_dir]
+   Portal:   [portal_url]
    ```
 
    Suggest starting a new session to see the SessionStart context, and running `/storyflow:guide` for how to work with StoryFlow from here.
@@ -80,3 +83,5 @@ Setup does **not** ask for a project. An asset is worked on under any number of 
 ## Reconfiguring
 
 Re-running setup on a codebase that already has `.storyflow/config.json` rewrites it. Read the existing file first and keep any extra asset entries whose `working_dir` still exists, so a monorepo setup is not lost.
+
+A config written before version 3 carries no `portal_url`. Re-running setup adds it, which is also the fix when the agency moves to a different domain.

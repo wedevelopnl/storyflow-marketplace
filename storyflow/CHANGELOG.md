@@ -14,7 +14,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - `.storyflow/config.json` version 3 carries `portal_url`, the host the agency's users log in on. StoryFlow is white-label, so that host is `https://app.wedevelop.nl` for one agency and another domain for the next; `https://app.storyflowhq.com` is only the fallback for an agency without a custom domain. Every user-facing StoryFlow link a skill writes is built on it, and both skills now refuse to guess a host. A version 2 config keeps working: the guide reads the host from `get-current-user` and suggests re-running setup.
 - `/storyflow:guide` now states how the story key reaches git. Once the work belongs to a known story, the branch leads with the key (`WDV-42-rate-limit-login`, behind whatever prefix the repository already uses), commits are Conventional Commits with the key as the scope (`feat(WDV-42): rate limit the login endpoint`), and the merge request is titled `WDV-42: <story title>` with a `/go/story/WDV-42` permalink in its description. One commit belongs to one story, one merge request carries one story, and work without a story carries no key: a key on a commit claims the customer approved that work and is billed for it.
-- `/storyflow:guide` now closes with a third thing no tool enforces: after working on a story, check its status still matches reality and correct it with `transition-story`. No tool moves a story's status on its own, so a stale status only gets fixed when the architect checks for it.
+- `/storyflow:guide` now states when the story's status moves with the work. `start` when the branch is created, preceded by `assign-story` when the story has no architect; an internal comment on the story with the merge request link and a short explanation when the merge request opens, while the status stays `Doing`; `submit-for-review` once the work is where the customer tests it, confirmed with the architect because the repository does not show where a merge landed. An incident moves at the same moments with `start-work` and `resolve`. A story earlier than `ToDo` is not approved, so the guide says to stop rather than walk it forward with `toStatus`.
+- `/storyflow:guide` now closes with a third thing no tool enforces: keep the board truthful. Any story whose status no longer matches reality gets corrected with `transition-story`, whoever it belongs to.
+
+### Fixed
+
+- `/storyflow:guide` claimed no tool in the set assigns an architect to a story. `assign-story` does, and assigns the caller when no architect is given, so `start` no longer has to wait for the app.
 
 ## 8.0.2 - 2026-08-26
 

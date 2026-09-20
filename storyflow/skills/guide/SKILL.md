@@ -1,6 +1,6 @@
 ---
 name: guide
-description: "How StoryFlow works and how to work with it: the data model, the story lifecycle, briefings as intake, the local config, resolving a project, which guidelines to fetch before writing, and how the story key travels into branches, commits and merge requests. Use whenever working with StoryFlow stories, briefings, epics, releases or refinement."
+description: "How StoryFlow works and how to work with it: the data model, the story lifecycle, briefings as intake, the local config, resolving a project, which guidelines to fetch before writing, how the story key travels into branches, commits and merge requests, and when the story's status moves with the work. Use whenever working with StoryFlow stories, briefings, epics, releases or refinement, and when starting, committing or opening a merge request for work that belongs to a story."
 ---
 
 # Working with StoryFlow
@@ -61,7 +61,7 @@ An `incident` never enters that track. It starts at `Open`, never `Draft`, and r
 
 Each forward step has a matching `return-to-*` transition, and going back is non-destructive: `return-to-scoped` keeps the refinement, `return-to-priced` and `return-to-refined` keep the price. Correcting a story by moving it back loses nothing.
 
-Do not assume which step is available from these lines: `get-story` returns the transitions available for that story right now, along with the data each one needs, already checked against your role. Two gates block a walk that otherwise looks open: `approve` needs the story to have a project, and `start` needs an architect assigned to it. No tool in this set assigns an architect, so that one ends in the app. `transition-story` performs one step, or walks to a target status in a single call.
+Do not assume which step is available from these lines: `get-story` returns the transitions available for that story right now, along with the data each one needs, already checked against your role. Two gates block a walk that otherwise looks open: `approve` needs the story to have a project, and `start` needs an architect assigned to it. `assign-story` sets the architect, and assigns you when called without one. `transition-story` performs one step, or walks to a target status in a single call.
 
 Storing content and moving a story are separate actions. `refine-story` saves a refinement and `price-story` saves a price; neither changes the status. The matching transition commits it.
 
@@ -196,10 +196,36 @@ One merge request carries one story. When the work genuinely spans several, list
 
 Work with no story behind it, a chore in the repository itself or a fix the architect asked for directly, carries no key. Never invent one and never borrow a neighbouring story's key to make the trail look complete: a key on a commit claims the customer approved that work and is billed for it.
 
+## Moving the story with the work
+
+The key ties the code to the story. The status tells everyone else how far that work is, and no tool moves it for you: the status changes at the moment the work does, by whoever does the work. On the `request` and `problem` track these are the moments.
+
+**Before the first commit, the story is in `ToDo`.** `ToDo` means the customer approved the work and its price. A story earlier in the track is not approved: say so and stop. Do not walk it to `Doing` with `toStatus` to get going. `accept`, `scope`, `refine`, `price` and `approve` are decisions, each with something behind it that a walk skips: a scope, a refinement, a price, the customer's approval.
+
+**Starting the work: `start`.** With the branch created, move the story to `Doing`. `start` needs an architect on the story; when `get-story` shows none, `assign-story` without an `architect` parameter assigns you, then `start`.
+
+**Opening the merge request: an internal comment.** The status stays `Doing`: the merge request is the agency's review, not the customer's. Put the link on the story with `add-story-comment` and `isInternal: true`, since the repository is the agency's and the customer reads the story. The comment opens with the link and follows with two or three lines: what the change does, what the reviewer should look at, what is deliberately left out.
+
+```
+Merge request: https://gitlab.example.com/acme/webshop/-/merge_requests/57
+
+Rate limits the login endpoint to five attempts per fifteen minutes per account and IP, with a 429 on the next one. Reviewer: the threshold is a config value, check its default against the refinement. Not in this MR: the admin unlock, which is ACME-43.
+```
+
+The merge request description already links to the story; the comment closes the loop the other way, so whoever picks up the story from the board reaches the code in one click. Every merge request gets its own comment, also the second one on the same story after `request-changes`.
+
+**Delivering: `submit-for-review`.** `InReview` is the customer's acceptance gate, so the story reaches it when the customer can see or test the work: not when the merge request opens, and not on its own when it merges. The repository does not show where a merge landed. Ask the architect whether the work is on the environment the customer tests on, and on yes, `submit-for-review`. Where the architect says merging deploys there, the merge is that moment.
+
+**Sent back: `request-changes` returns the story to `Doing`.** The rework carries the same key, its merge request gets its own comment, and `submit-for-review` follows again once it is back where the customer tests.
+
+An incident moves at the same moments on its own track: `start-work` when the fix begins, `resolve` when it is in place, with `workaroundApplied` when a workaround stands in for the permanent fix.
+
+Report every transition and comment you make, with the key and the new status, so the architect sees the board move.
+
 ## Three things no tool enforces
 
 **Show before you save.** Everything that reaches StoryFlow is read by the customer or billed to them. Present a briefing, a set of stories, a refinement or a price to the architect and wait for approval before calling the tool that writes it.
 
 **Story generation is one-shot.** `create-briefing-stories` runs once per briefing and refuses a second call. Get the whole set right before you send it.
 
-**Keep the board triaged.** No tool moves a story's status for you. After you work on one, check whether its status still matches reality before you move on, and correct it with `transition-story` if it does not. A board only stays useful if everyone leaves it truthful, not just their own story.
+**Keep the board truthful.** The moments above are where your own story moves. Any story you touch whose status no longer matches reality, correct with `transition-story`, whoever it belongs to. A board only stays useful if everyone leaves it truthful, not just their own story.

@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+## 8.1.0 - 2026-09-20
+
 ### Requires
 
 - StoryFlow backend with the portal url on `get-current-user`. The tool reports the agency's own host on a `Portal:` line, which `/storyflow:setup` writes to the config as `portal_url`. Without it setup has no host to store and falls back to asking.

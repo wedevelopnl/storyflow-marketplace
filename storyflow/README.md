@@ -2,7 +2,7 @@
 
 Connect Claude Code to the StoryFlow platform. The plugin ships the StoryFlow MCP server plus four skills, for agency Software Architects working on client codebases.
 
-The MCP toolset is the interface: briefings, stories, epics, releases, refinement, pricing, transitions and asset documentation are all tools, and their descriptions carry their own contracts. `/storyflow:guide` explains how the pieces fit together, and loads on its own when StoryFlow work comes up.
+The MCP toolset is the interface: briefings, stories, epics, releases, refinement, pricing, transitions and asset documentation are all tools, and their descriptions carry their own contracts. `/storyflow:guide` loads on its own when StoryFlow work comes up: it reads the guide to how the pieces fit together from StoryFlow itself (`get-storyflow-guide`), so it always matches the running version.
 
 ## Requirements
 

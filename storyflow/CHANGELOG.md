@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+### Requires
+
+- StoryFlow backend with `get-storyflow-guide`. The guide skill reads the explanation of how StoryFlow works from that tool; without it the skill has only the local config to offer.
+
+### Changed
+
+- `/storyflow:guide` reads the guide from StoryFlow through `get-storyflow-guide` instead of carrying its own copy. The data model, the lifecycles, briefings, resolving a project, the guidelines map, the story key in git and moving the story with the work now arrive with every StoryFlow release, tailored to the caller's role and with the agency's portal host filled in. The skill keeps only what StoryFlow cannot know: `.storyflow/config.json` and how the active asset is resolved from the working directory.
+
+### Fixed
+
+- The guide no longer calls `Cancelled` terminal. `restore` brings a cancelled story back to the step it was cancelled from.
+
 ## 8.1.0 - 2026-09-20
 
 ### Requires

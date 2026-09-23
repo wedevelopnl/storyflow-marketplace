@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+## 8.2.0 - 2026-09-23
+
 ### Requires
 
 - StoryFlow backend with `get-storyflow-guide`. The guide skill reads the explanation of how StoryFlow works from that tool; without it the skill has only the local config to offer.

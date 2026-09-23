@@ -14,6 +14,8 @@ The plugin's tools come from the StoryFlow MCP server, which lives in a differen
 
 That split has one hard consequence: a plugin release that uses a new or changed MCP tool must land **after** the backend change is deployed. A published skill calling a tool that does not exist yet fails for every user at once. Note the dependency in the CHANGELOG entry as a "Requires" section, and verify the backend is live before pushing.
 
+The explanation of how StoryFlow works lives in the backend and reaches the `guide` skill through `get-storyflow-guide` (sections in `backend/resources/mcp-guide/`). Change it there. The skill carries only the local contract: `.storyflow/config.json` and resolving the active asset.
+
 ## Config the plugin writes
 
 `/storyflow:setup` writes `.storyflow/config.json` in the user's project. Version 3 holds a customer, an assets array and `portal_url`, and deliberately no project: an asset belongs to many projects at once, so a checkout cannot name one. Anything needing a project resolves it per action, per the rule in `/storyflow:guide`.

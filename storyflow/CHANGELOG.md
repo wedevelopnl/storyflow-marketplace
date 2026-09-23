@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+### Requires
+
+- StoryFlow backend whose `get-refinement-guidelines` carries the workflow for refining one story and a briefing. The refine commands follow that workflow; an older backend serves a workflow that selects the wrong stories for a briefing.
+
+### Changed
+
+- `/storyflow:refine-story` and `/storyflow:refine-briefing` read their whole workflow from StoryFlow through `get-refinement-guidelines` instead of carrying their own steps. The command names and their pre-approved tools stay the same; a change to how refinement works now reaches the architect with a StoryFlow release.
+- A refinement is shown for approval before it is saved, and committing it with `refine` is suggested rather than performed.
+
+### Fixed
+
+- The refine commands no longer accept and scope a story on their own to make it refineable. A story earlier than `Scoped` is reported with the step it misses, which stays the architect's decision.
+
 ## 8.2.0 - 2026-09-23
 
 ### Requires

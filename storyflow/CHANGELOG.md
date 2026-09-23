@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+## 8.3.0 - 2026-09-23
+
 ### Requires
 
 - StoryFlow backend whose `get-refinement-guidelines` carries the workflow for refining one story and a briefing. The refine commands follow that workflow; an older backend serves a workflow that selects the wrong stories for a briefing.

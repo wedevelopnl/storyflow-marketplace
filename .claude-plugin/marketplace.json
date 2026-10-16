@@ -12,7 +12,7 @@
     {
       "name": "storyflow",
       "source": "./storyflow",
-      "description": "The StoryFlow toolset for Software Architects: briefings, stories, refinement and pricing, with a guide to working with them",
+      "description": "The StoryFlow toolset for Software Architects: briefings, stories and pricing, with a guide to working with them",
       "version": "9.0.0"
     }
   ]

@@ -12,7 +12,7 @@ Users install it through Claude Code's marketplace system, so the published `mai
 
 The plugin's tools come from the StoryFlow MCP server, which lives in a different repo: `wedevelop/storyflow` on git.wdvlp.nl (GitLab). The MCP tool definitions are in `backend/src/Presentation/Mcp/Tool/` there.
 
-That split has one hard consequence: a plugin release that uses a new or changed MCP tool must land **after** the backend change is deployed. A published skill calling a tool that does not exist yet fails for every user at once. Note the dependency in the CHANGELOG entry as a "Requires" section, and verify the backend is live before pushing.
+That split has one hard consequence: a plugin release that uses a new or changed MCP tool must land **after** the backend change is deployed. A published skill calling a tool that does not exist yet fails for every user at once. Note the dependency in the CHANGELOG entry as a "Requires" section, and verify the backend is live before pushing. The reverse holds for a removed tool: the plugin release that stops calling it lands **before** the backend removes it.
 
 The explanation of how StoryFlow works lives in the backend and reaches the `guide` skill through `get-storyflow-guide` (sections in `backend/resources/mcp-guide/`). Change it there. The skill carries only the local contract: `.storyflow/config.json` and resolving the active asset.
 

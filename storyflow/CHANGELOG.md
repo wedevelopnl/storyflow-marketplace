@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+## 9.0.1 - 2026-10-16
+
 ### Changed
 
 - The plugin description no longer lists refinement: the plugin ships no refinement command since 9.0.0.

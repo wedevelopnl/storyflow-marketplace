@@ -1,6 +1,6 @@
 # StoryFlow Plugin for Claude Code
 
-Connect Claude Code to the StoryFlow platform. The plugin ships the StoryFlow MCP server plus four skills, for agency Software Architects working on client codebases.
+Connect Claude Code to the StoryFlow platform. The plugin ships the StoryFlow MCP server plus two skills, for agency Software Architects working on client codebases.
 
 The MCP toolset is the interface: briefings, stories, epics, releases, refinement, pricing, transitions and asset documentation are all tools, and their descriptions carry their own contracts. `/storyflow:guide` loads on its own when StoryFlow work comes up: it reads the guide to how the pieces fit together from StoryFlow itself (`get-storyflow-guide`), so it always matches the running version.
 
@@ -55,8 +55,6 @@ The plugin targets Claude Code, but the StoryFlow MCP server works with any MCP 
 |-------|-------------|
 | `/storyflow:setup` | Link this codebase to its StoryFlow asset |
 | `/storyflow:guide` | How StoryFlow works: the data model, the story lifecycle, briefings as intake, the local config, resolving a project, which guidelines to fetch before writing, and how the story key and status follow the work into git |
-| `/storyflow:refine-story <id>` | Refine a single story with multi-agent analysis |
-| `/storyflow:refine-briefing <id>` | Refine all stories of a briefing with multi-agent analysis |
 
 `/storyflow:guide` is also auto-triggered by Claude when StoryFlow work comes up, so the domain model is available without asking for it.
 
@@ -64,7 +62,7 @@ Everything else runs through the MCP toolset directly.
 
 ## Guidelines come from StoryFlow
 
-The agency's standards for writing briefings, writing stories, refining, pricing and documenting an asset are served by the application itself: `get-briefing-guidelines`, `get-story-guidelines`, `get-briefing-to-stories-guidelines`, `get-refinement-guidelines`, `get-pricing-guidelines` and `get-asset-documentation-guidelines`. They are the same ones the in-app assistants use, so a change to agency standards reaches the architect without a plugin release.
+The agency's standards for writing briefings, writing stories, pricing and documenting an asset are served by the application itself: `get-briefing-guidelines`, `get-story-guidelines`, `get-briefing-to-stories-guidelines`, `get-pricing-guidelines` and `get-asset-documentation-guidelines`. They are the same ones the in-app assistants use, so a change to agency standards reaches the architect without a plugin release.
 
 ## How it works
 

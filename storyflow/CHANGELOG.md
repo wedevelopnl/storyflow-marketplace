@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+## 9.0.0 - 2026-10-16
+
 ### BREAKING CHANGES
 
 **`/storyflow:refine-story` and `/storyflow:refine-briefing` are removed.** StoryFlow no longer serves a refinement method: `get-refinement-guidelines`, which both commands followed, is going away. Refine in the StoryFlow app, or with your agency's own refinement skill; it saves through the `refine-story` tool, which stays, together with `set-story-estimates` and the `refine` transition.

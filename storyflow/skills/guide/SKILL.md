@@ -1,13 +1,13 @@
 ---
 name: guide
-description: "How StoryFlow works and how to work with it: the data model, the story lifecycle, briefings as intake, the local config, resolving a project, which guidelines to fetch before writing, how the story key travels into branches, commits and merge requests, and when the story's status moves with the work. Use whenever working with StoryFlow stories, briefings, epics, releases or refinement, and when starting, committing or opening a merge request for work that belongs to a story."
+description: "How StoryFlow works and how to work with it: the data model, the story lifecycle, the local config, resolving a project, which guidelines to fetch before writing, how the story key travels into branches, commits and merge requests, and when the story's status moves with the work. Use whenever working with StoryFlow stories, epics, releases or refinement, and when starting, committing or opening a merge request for work that belongs to a story."
 ---
 
 # Working with StoryFlow
 
 ## Read the guide from StoryFlow first
 
-Call `mcp__storyflow__get-storyflow-guide` and follow it. It explains the data model, the story and incident lifecycles, briefings, how to resolve a project, which guidelines to fetch before writing, how the story key travels into branches, commits and merge requests, and when the story's status moves with the work. StoryFlow serves it with every release, tailored to your role and with your agency's portal host filled in, so it always matches the version you are talking to.
+Call `mcp__storyflow__get-storyflow-guide` and follow it. It explains the data model, the story and incident lifecycles, how to resolve a project, which guidelines to fetch before writing, how the story key travels into branches, commits and merge requests, and when the story's status moves with the work. StoryFlow serves it with every release, tailored to your role and with your agency's portal host filled in, so it always matches the version you are talking to.
 
 Read it once per session, before the first StoryFlow action. Do not work from a memory of what it said in an earlier session.
 

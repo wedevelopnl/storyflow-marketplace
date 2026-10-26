@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+### Changed
+
+- StoryFlow no longer has briefings: the story is the only way a customer hands in work, and every `*-briefing*` tool, `get-briefing-guidelines` and `get-briefing-to-stories-guidelines` are gone. The plugin description, `/storyflow:guide` and `/storyflow:setup` no longer name briefings, and the README lists only the guidelines StoryFlow still serves: `get-story-guidelines`, `get-pricing-guidelines` and `get-asset-documentation-guidelines`. No skill called a briefing tool, so this release works against a StoryFlow backend with and without them.
+
 ## 9.0.1 - 2026-10-16
 
 ### Changed

@@ -2,7 +2,7 @@
 
 Connect Claude Code to the StoryFlow platform. The plugin ships the StoryFlow MCP server plus two skills, for agency Software Architects working on client codebases.
 
-The MCP toolset is the interface: briefings, stories, epics, releases, refinement, pricing, transitions and asset documentation are all tools, and their descriptions carry their own contracts. `/storyflow:guide` loads on its own when StoryFlow work comes up: it reads the guide to how the pieces fit together from StoryFlow itself (`get-storyflow-guide`), so it always matches the running version.
+The MCP toolset is the interface: stories, epics, releases, refinement, pricing, transitions and asset documentation are all tools, and their descriptions carry their own contracts. `/storyflow:guide` loads on its own when StoryFlow work comes up: it reads the guide to how the pieces fit together from StoryFlow itself (`get-storyflow-guide`), so it always matches the running version.
 
 ## Requirements
 
@@ -43,7 +43,7 @@ Start Claude Code in your project directory and run:
 
 This links the current codebase to its StoryFlow **asset**, detected from the git remote URL. An asset is a codebase belonging to one customer, and it is the only thing a checkout maps onto one-to-one.
 
-Setup does not ask which project the codebase belongs to, because there is no such thing: an asset is worked on under any number of projects at once (a redesign, a maintenance retainer, a release train). Project is a property of the work. Briefings, stories, epics, initiatives and releases pick one when they are created, from the projects that contain the asset (`list-projects` with `assetId`).
+Setup does not ask which project the codebase belongs to, because there is no such thing: an asset is worked on under any number of projects at once (a redesign, a maintenance retainer, a release train). Project is a property of the work. Stories, epics, initiatives and releases pick one when they are created, from the projects that contain the asset (`list-projects` with `assetId`).
 
 ### Other MCP clients
 
@@ -54,7 +54,7 @@ The plugin targets Claude Code, but the StoryFlow MCP server works with any MCP 
 | Skill | Description |
 |-------|-------------|
 | `/storyflow:setup` | Link this codebase to its StoryFlow asset |
-| `/storyflow:guide` | How StoryFlow works: the data model, the story lifecycle, briefings as intake, the local config, resolving a project, which guidelines to fetch before writing, and how the story key and status follow the work into git |
+| `/storyflow:guide` | How StoryFlow works: the data model, the story lifecycle, the local config, resolving a project, which guidelines to fetch before writing, and how the story key and status follow the work into git |
 
 `/storyflow:guide` is also auto-triggered by Claude when StoryFlow work comes up, so the domain model is available without asking for it.
 
@@ -62,7 +62,7 @@ Everything else runs through the MCP toolset directly.
 
 ## Guidelines come from StoryFlow
 
-The agency's standards for writing briefings, writing stories, pricing and documenting an asset are served by the application itself: `get-briefing-guidelines`, `get-story-guidelines`, `get-briefing-to-stories-guidelines`, `get-pricing-guidelines` and `get-asset-documentation-guidelines`. They are the same ones the in-app assistants use, so a change to agency standards reaches the architect without a plugin release.
+The agency's standards for writing stories, pricing and documenting an asset are served by the application itself: `get-story-guidelines`, `get-pricing-guidelines` and `get-asset-documentation-guidelines`. A change to agency standards therefore reaches the architect without a plugin release.
 
 ## How it works
 

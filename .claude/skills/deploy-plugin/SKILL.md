@@ -34,7 +34,7 @@ git add -A && git commit -m "<message>"
 ```
 
 Use a conventional commit message scoped to `storyflow`, for example:
-- `feat(storyflow): add new briefing command`
+- `feat(storyflow): add new story skill`
 - `fix(storyflow): correct MCP server config`
 - `chore(storyflow): update skill descriptions`
 

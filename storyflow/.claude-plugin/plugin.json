@@ -1,12 +1,12 @@
 {
   "name": "storyflow",
   "version": "9.0.1",
-  "description": "The StoryFlow toolset for Software Architects: briefings, stories and pricing, with a guide to working with them",
+  "description": "The StoryFlow toolset for Software Architects: stories and pricing, with a guide to working with them",
   "author": {
     "name": "WeDevelop",
     "url": "https://wedevelop.nl"
   },
   "repository": "https://github.com/wedevelopnl/storyflow-marketplace",
   "license": "MIT",
-  "keywords": ["storyflow", "sdaas", "ai-assisted-development", "briefings", "agency", "transparency", "value-based-development"]
+  "keywords": ["storyflow", "sdaas", "ai-assisted-development", "stories", "agency", "transparency", "value-based-development"]
 }
